@@ -1,0 +1,4745 @@
+﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>红途·红色文化传承平台</title>
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet">
+    <script src="https://api.map.baidu.com/api?v=3.0&ak=rd2LfXzryJjeeRANOdCC2R5ThJTLMSnc"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --red-primary: #C41E3A;
+            --red-dark: #8B0000;
+            --red-light: #FF6B6B;
+            --gold: #D4AF37;
+            --bg-light: #FFF8F0;
+            --text-dark: #2C1810;
+            --text-gray: #666;
+        }
+
+        body {
+            font-family: 'PingFang SC', 'Microsoft YaHei', sans-serif;
+            background: var(--bg-light);
+            color: var(--text-dark);
+            overflow-x: hidden;
+            height: 100vh;
+        }
+
+        .app-container {
+            max-width: 430px;
+            margin: 0 auto;
+            height: 100vh;
+            background: #fff;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 0 30px rgba(196, 30, 58, 0.1);
+        }
+
+        .page {
+            display: none;
+            height: 100%;
+            flex-direction: column;
+        }
+
+        .page.active {
+            display: flex;
+        }
+
+        .login-page {
+            background: linear-gradient(180deg, var(--red-primary) 0%, var(--red-dark) 100%);
+            justify-content: center;
+            padding: 40px 30px;
+        }
+
+        .login-logo {
+            text-align: center;
+            margin-bottom: 60px;
+        }
+
+        .login-logo img {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin-bottom: 20px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.3);
+        }
+
+        .login-logo h1 {
+            color: #fff;
+            font-size: 32px;
+            letter-spacing: 8px;
+            font-weight: bold;
+        }
+
+        .login-logo p {
+            color: rgba(255,255,255,0.8);
+            margin-top: 10px;
+            font-size: 14px;
+        }
+
+        .login-form {
+            background: rgba(255,255,255,0.95);
+            border-radius: 20px;
+            padding: 40px 30px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+        }
+
+        .input-group {
+            margin-bottom: 20px;
+        }
+
+        .input-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: var(--text-gray);
+            font-size: 14px;
+        }
+
+        .input-wrapper {
+            display: flex;
+            border: 2px solid #E0E0E0;
+            border-radius: 12px;
+            overflow: hidden;
+            transition: all 0.3s;
+        }
+
+        .input-wrapper:focus-within {
+            border-color: var(--red-primary);
+        }
+
+        .input-wrapper i {
+            padding: 15px;
+            background: var(--bg-light);
+            color: var(--red-primary);
+            font-size: 20px;
+        }
+
+        .input-wrapper input {
+            flex: 1;
+            border: none;
+            outline: none;
+            padding: 15px;
+            font-size: 16px;
+        }
+
+        .code-btn {
+            padding: 0 15px;
+            background: var(--red-primary);
+            color: #fff;
+            border: none;
+            font-size: 14px;
+            cursor: pointer;
+        }
+
+        .code-btn:disabled {
+            background: #ccc;
+        }
+
+        .login-btn {
+            width: 100%;
+            padding: 16px;
+            background: linear-gradient(135deg, var(--red-primary) 0%, var(--red-dark) 100%);
+            color: #fff;
+            border: none;
+            border-radius: 12px;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 20px;
+            box-shadow: 0 6px 20px rgba(196, 30, 58, 0.4);
+            transition: transform 0.2s;
+        }
+
+        .login-btn:active {
+            transform: scale(0.98);
+        }
+
+        .guest-btn {
+            width: 100%;
+            padding: 14px;
+            background: transparent;
+            color: var(--red-primary);
+            border: 2px solid var(--red-primary);
+            border-radius: 12px;
+            font-size: 16px;
+            cursor: pointer;
+            margin-top: 15px;
+        }
+
+        .header {
+            background: linear-gradient(135deg, var(--red-primary) 0%, var(--red-dark) 100%);
+            padding: 15px 20px;
+            padding-top: calc(15px + env(safe-area-inset-top));
+            color: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-shrink: 0;
+        }
+
+        .header-title {
+            font-size: 18px;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .header-title img {
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+
+        .map-page .content {
+            flex: 1;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .map-container {
+            width: 100%;
+            height: 100%;
+            position: relative;
+            background-image: url('图片素材/地图模版.jpg');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+        }
+
+        .grid-lines {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
+            display: none;
+        }
+
+        .longitude-line {
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            width: 1px;
+            background: rgba(196, 30, 58, 0.3);
+        }
+
+        .latitude-line {
+            position: absolute;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: rgba(196, 30, 58, 0.3);
+        }
+
+        .longitude-label {
+            position: absolute;
+            bottom: 5px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 10px;
+            color: rgba(196, 30, 58, 0.8);
+            background: rgba(255, 255, 255, 0.8);
+            padding: 1px 4px;
+            border-radius: 2px;
+        }
+
+        .latitude-label {
+            position: absolute;
+            right: 5px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 10px;
+            color: rgba(196, 30, 58, 0.8);
+            background: rgba(255, 255, 255, 0.8);
+            padding: 1px 4px;
+            border-radius: 2px;
+        }
+
+        #baidu-container {
+            width: 100%;
+            height: 100%;
+            display: block;
+        }
+
+        .search-bar {
+            position: absolute;
+            top: 15px;
+            left: 15px;
+            right: 15px;
+            background: #fff;
+            border-radius: 25px;
+            padding: 12px 20px;
+            display: flex;
+            align-items: center;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+            z-index: 10;
+        }
+
+        .search-bar i {
+            color: var(--red-primary);
+            margin-right: 10px;
+        }
+
+        .search-bar input {
+            flex: 1;
+            border: none;
+            outline: none;
+            font-size: 15px;
+        }
+
+        .search-results {
+            position: absolute;
+            top: 70px;
+            left: 15px;
+            right: 15px;
+            background: #fff;
+            border-radius: 15px;
+            max-height: 300px;
+            overflow-y: auto;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+            z-index: 9;
+            display: none;
+        }
+
+        .search-results.show {
+            display: block;
+        }
+
+        .search-item {
+            padding: 15px;
+            border-bottom: 1px solid #f0f0f0;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .search-item:hover {
+            background: var(--bg-light);
+        }
+
+        .search-item:last-child {
+            border-bottom: none;
+        }
+
+        .search-item i {
+            color: var(--red-primary);
+            font-size: 22px;
+        }
+
+        .search-item-info h4 {
+            font-size: 15px;
+            margin-bottom: 3px;
+        }
+
+        .search-item-info p {
+            font-size: 12px;
+            color: var(--text-gray);
+        }
+
+        .coord-display {
+            position: absolute;
+            bottom: 80px;
+            left: 15px;
+            background: rgba(255,255,255,0.95);
+            padding: 10px 15px;
+            border-radius: 10px;
+            font-size: 12px;
+            color: var(--text-dark);
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            z-index: 10;
+        }
+
+        .coord-display span {
+            color: var(--red-primary);
+            font-weight: bold;
+        }
+
+        .map-float-btns {
+            position: absolute;
+            right: 15px;
+            bottom: 80px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            z-index: 10;
+        }
+
+        .float-btn {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: #fff;
+            border: none;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.15);
+            cursor: pointer;
+            font-size: 22px;
+            color: var(--red-primary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s;
+        }
+
+        .float-btn:active {
+            transform: scale(0.95);
+        }
+
+        .float-btn.voice {
+            background: linear-gradient(135deg, var(--red-primary) 0%, var(--red-dark) 100%);
+            color: #fff;
+        }
+
+        .float-btn.voice.active {
+            animation: pulse 1s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { box-shadow: 0 0 0 0 rgba(196, 30, 58, 0.7); }
+            50% { box-shadow: 0 0 0 15px rgba(196, 30, 58, 0); }
+        }
+
+        .route-panel {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: #fff;
+            border-radius: 20px 20px 0 0;
+            padding: 20px;
+            box-shadow: 0 -4px 20px rgba(0,0,0,0.1);
+            z-index: 15;
+            display: none;
+            max-height: 40%;
+        }
+
+        .route-panel.show {
+            display: block;
+            animation: slideUp 0.3s ease;
+        }
+
+        @keyframes slideUp {
+            from { transform: translateY(100%); }
+            to { transform: translateY(0); }
+        }
+
+        .route-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .route-title {
+            font-size: 16px;
+            font-weight: bold;
+            color: var(--red-primary);
+        }
+
+        .route-close {
+            font-size: 24px;
+            cursor: pointer;
+            color: var(--text-gray);
+        }
+
+        .route-modes {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        .route-mode {
+            flex: 1;
+            padding: 10px;
+            text-align: center;
+            background: var(--bg-light);
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 13px;
+            transition: all 0.3s;
+        }
+
+        .route-mode.active {
+            background: var(--red-primary);
+            color: #fff;
+        }
+
+        .route-info {
+            display: flex;
+            justify-content: space-around;
+            padding: 15px;
+            background: var(--bg-light);
+            border-radius: 10px;
+            margin-bottom: 15px;
+        }
+
+        .route-info-item {
+            text-align: center;
+        }
+
+        .route-info-value {
+            font-size: 20px;
+            font-weight: bold;
+            color: var(--red-primary);
+        }
+
+        .route-info-label {
+            font-size: 12px;
+            color: var(--text-gray);
+            margin-top: 4px;
+        }
+
+        .start-nav-btn {
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(135deg, var(--red-primary) 0%, var(--red-dark) 100%);
+            color: #fff;
+            border: none;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .learning-page .content,
+        .community-page .content,
+        .profile-page .content {
+            flex: 1;
+            overflow-y: auto;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        .carousel {
+            position: relative;
+            overflow: hidden;
+            height: 180px;
+            background: #fff;
+        }
+
+        .carousel-inner {
+            display: flex;
+            transition: transform 0.5s ease;
+            height: 100%;
+        }
+
+        .carousel-item {
+            min-width: 100%;
+            height: 100%;
+            position: relative;
+        }
+
+        .carousel-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .carousel-item-bg {
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, var(--red-primary) 0%, var(--red-dark) 100%);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            color: #fff;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .carousel-item-bg i {
+            font-size: 50px;
+            margin-bottom: 10px;
+        }
+
+        .carousel-item-bg h4 {
+            font-size: 18px;
+            margin-bottom: 5px;
+        }
+
+        .carousel-item-bg p {
+            font-size: 13px;
+            opacity: 0.9;
+        }
+
+        .carousel-dots {
+            position: absolute;
+            bottom: 10px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 8px;
+        }
+
+        .carousel-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.5);
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .carousel-dot.active {
+            background: #fff;
+            width: 20px;
+            border-radius: 4px;
+        }
+
+        .tabs {
+            display: flex;
+            background: #fff;
+            border-bottom: 1px solid #eee;
+        }
+
+        .tab {
+            flex: 1;
+            padding: 15px;
+            text-align: center;
+            cursor: pointer;
+            font-size: 15px;
+            color: var(--text-gray);
+            position: relative;
+            transition: all 0.3s;
+        }
+
+        .tab.active {
+            color: var(--red-primary);
+            font-weight: bold;
+        }
+
+        .tab.active::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 40px;
+            height: 3px;
+            background: var(--red-primary);
+            border-radius: 3px;
+        }
+
+        .tab-content {
+            display: none;
+            padding: 15px;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .card {
+            background: #fff;
+            border-radius: 15px;
+            margin-bottom: 15px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            overflow: hidden;
+        }
+
+        .card-image {
+            height: 160px;
+            background: linear-gradient(135deg, var(--red-light) 0%, var(--red-primary) 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 70px;
+            color: #fff;
+        }
+
+        .card-content {
+            padding: 15px;
+        }
+
+        .card-tag {
+            display: inline-block;
+            background: rgba(196, 30, 58, 0.1);
+            color: var(--red-primary);
+            padding: 4px 10px;
+            border-radius: 4px;
+            font-size: 12px;
+            margin-bottom: 8px;
+        }
+
+        .card-title {
+            font-size: 16px;
+            font-weight: bold;
+            margin-bottom: 8px;
+        }
+
+        .card-desc {
+            font-size: 13px;
+            color: var(--text-gray);
+            line-height: 1.6;
+        }
+
+        .card-hero {
+            display: flex;
+            gap: 12px;
+            padding: 15px;
+            background: linear-gradient(135deg, rgba(196, 30, 58, 0.05) 0%, rgba(139, 0, 0, 0.05) 100%);
+            border-left: 4px solid var(--red-primary);
+        }
+
+        .card-hero-avatar {
+            width: 70px;
+            height: 70px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--red-primary) 0%, var(--red-dark) 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #fff;
+            font-size: 32px;
+            flex-shrink: 0;
+        }
+
+        .card-hero-info {
+            flex: 1;
+        }
+
+        .card-hero-name {
+            font-size: 17px;
+            font-weight: bold;
+            color: var(--red-dark);
+            margin-bottom: 4px;
+        }
+
+        .card-hero-title {
+            font-size: 13px;
+            color: var(--gold);
+            margin-bottom: 6px;
+        }
+
+        .card-hero-desc {
+            font-size: 13px;
+            color: var(--text-gray);
+            line-height: 1.6;
+        }
+
+        .card-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-top: 12px;
+            margin-top: 12px;
+            border-top: 1px solid #f0f0f0;
+        }
+
+        .card-stats {
+            display: flex;
+            gap: 15px;
+            color: var(--text-gray);
+            font-size: 13px;
+        }
+
+        .card-stats span {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .video-card {
+            display: flex;
+            gap: 12px;
+            padding: 12px;
+        }
+
+        .video-thumb {
+            width: 140px;
+            height: 90px;
+            background: linear-gradient(135deg, var(--red-primary) 0%, var(--red-dark) 100%);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #fff;
+            font-size: 36px;
+            flex-shrink: 0;
+        }
+
+        .video-info {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .video-title {
+            font-size: 15px;
+            font-weight: bold;
+            margin-bottom: 6px;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .video-meta {
+            font-size: 12px;
+            color: var(--text-gray);
+        }
+
+        .activity-card {
+            display: flex;
+            padding: 15px;
+            gap: 12px;
+        }
+
+        .activity-icon {
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, var(--gold) 0%, #B8860B 100%);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #fff;
+            font-size: 26px;
+            flex-shrink: 0;
+        }
+
+        .activity-content {
+            flex: 1;
+        }
+
+        .activity-title {
+            font-size: 15px;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .activity-desc {
+            font-size: 13px;
+            color: var(--text-gray);
+            margin-bottom: 8px;
+        }
+
+        .activity-time {
+            font-size: 12px;
+            color: var(--gold);
+        }
+
+        .post-card {
+            background: #fff;
+            border-radius: 15px;
+            margin-bottom: 15px;
+            padding: 15px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
+
+        .post-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 12px;
+        }
+
+        .post-avatar {
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--red-primary) 0%, var(--red-dark) 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #fff;
+            font-size: 20px;
+        }
+
+        .post-user-info h4 {
+            font-size: 15px;
+            margin-bottom: 3px;
+        }
+
+        .post-user-info p {
+            font-size: 12px;
+            color: var(--text-gray);
+        }
+
+        .post-content {
+            margin-bottom: 12px;
+        }
+
+        .post-title {
+            font-size: 16px;
+            font-weight: bold;
+            margin-bottom: 8px;
+            color: var(--text-dark);
+        }
+
+        .post-text {
+            font-size: 14px;
+            line-height: 1.7;
+            color: #444;
+        }
+
+        .post-images {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 8px;
+            margin-top: 10px;
+        }
+
+        .post-image {
+            aspect-ratio: 1;
+            background: linear-gradient(135deg, var(--red-light) 0%, var(--red-primary) 100%);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #fff;
+            font-size: 30px;
+            overflow: hidden;
+        }
+
+        .post-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .post-actions {
+            display: flex;
+            border-top: 1px solid #f0f0f0;
+            padding-top: 12px;
+            margin-top: 12px;
+        }
+
+        .post-action {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 5px;
+            color: var(--text-gray);
+            font-size: 14px;
+            cursor: pointer;
+            transition: color 0.2s;
+        }
+
+        .post-action:hover, .post-action.liked {
+            color: var(--red-primary);
+        }
+
+        .post-topic {
+            display: inline-block;
+            background: rgba(196, 30, 58, 0.1);
+            color: var(--red-primary);
+            padding: 3px 10px;
+            border-radius: 15px;
+            font-size: 12px;
+            margin-bottom: 8px;
+        }
+
+        .profile-header {
+            background: linear-gradient(135deg, var(--red-primary) 0%, var(--red-dark) 100%);
+            padding: 30px 20px;
+            text-align: center;
+            color: #fff;
+        }
+
+        .profile-avatar {
+            width: 90px;
+            height: 90px;
+            border-radius: 50%;
+            background: #fff;
+            margin: 0 auto 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 45px;
+            color: var(--red-primary);
+            box-shadow: 0 5px 20px rgba(0,0,0,0.2);
+        }
+
+        .profile-name {
+            font-size: 22px;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .profile-id {
+            font-size: 14px;
+            opacity: 0.8;
+        }
+
+        .profile-stats {
+            display: flex;
+            justify-content: space-around;
+            padding: 25px 20px;
+            background: #fff;
+            margin: -20px 15px 15px;
+            border-radius: 15px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+            position: relative;
+            z-index: 2;
+        }
+
+        .stat-item {
+            text-align: center;
+        }
+
+        .stat-value {
+            font-size: 24px;
+            font-weight: bold;
+            color: var(--red-primary);
+        }
+
+        .stat-label {
+            font-size: 13px;
+            color: var(--text-gray);
+            margin-top: 4px;
+        }
+
+        .menu-list {
+            background: #fff;
+            margin: 0 15px 15px;
+            border-radius: 15px;
+            overflow: hidden;
+        }
+
+        .menu-item {
+            display: flex;
+            align-items: center;
+            padding: 16px 20px;
+            border-bottom: 1px solid #f5f5f5;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .menu-item:last-child {
+            border-bottom: none;
+        }
+
+        .menu-item:active {
+            background: var(--bg-light);
+        }
+
+        .menu-item i {
+            font-size: 22px;
+            color: var(--red-primary);
+            margin-right: 14px;
+            width: 28px;
+            text-align: center;
+        }
+
+        .menu-item span {
+            flex: 1;
+            font-size: 15px;
+        }
+
+        .menu-item .arrow {
+            color: #ccc;
+            font-size: 18px;
+        }
+
+        .menu-item.badge::after {
+            content: '3';
+            background: var(--red-primary);
+            color: #fff;
+            font-size: 11px;
+            padding: 2px 6px;
+            border-radius: 10px;
+            margin-right: 8px;
+        }
+
+        .logout-btn {
+            margin: 20px 15px;
+            padding: 15px;
+            background: #fff;
+            border: none;
+            border-radius: 15px;
+            font-size: 16px;
+            color: var(--red-primary);
+            cursor: pointer;
+            text-align: center;
+            font-weight: bold;
+        }
+
+        .bottom-nav {
+            display: flex;
+            background: #fff;
+            border-top: 1px solid #eee;
+            padding-bottom: env(safe-area-inset-bottom);
+            flex-shrink: 0;
+        }
+
+        .nav-item {
+            flex: 1;
+            padding: 10px 5px;
+            text-align: center;
+            cursor: pointer;
+            color: var(--text-gray);
+            transition: all 0.3s;
+        }
+
+        .nav-item.active {
+            color: var(--red-primary);
+        }
+
+        .nav-item i {
+            font-size: 24px;
+            display: block;
+            margin-bottom: 3px;
+        }
+
+        .nav-item span {
+            font-size: 12px;
+        }
+
+        .fab {
+            position: fixed;
+            bottom: 80px;
+            right: 20px;
+            width: 56px;
+            height: 56px;
+            background: linear-gradient(135deg, var(--red-primary) 0%, var(--red-dark) 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #fff;
+            font-size: 28px;
+            box-shadow: 0 6px 20px rgba(196, 30, 58, 0.4);
+            cursor: pointer;
+            z-index: 100;
+            display: none;
+        }
+
+        .fab.show {
+            display: flex;
+            animation: fabIn 0.3s ease;
+        }
+
+        @keyframes fabIn {
+            from { transform: scale(0); opacity: 0; }
+            to { transform: scale(1); opacity: 1; }
+        }
+
+        .topic-chips {
+            display: flex;
+            gap: 10px;
+            padding: 15px;
+            overflow-x: auto;
+            background: #fff;
+        }
+
+        .topic-chip {
+            padding: 8px 18px;
+            background: var(--bg-light);
+            border: none;
+            border-radius: 20px;
+            font-size: 14px;
+            color: var(--text-gray);
+            white-space: nowrap;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .topic-chip.active {
+            background: var(--red-primary);
+            color: #fff;
+        }
+
+        .detail-page .content,
+        .hero-detail-page .content,
+        .site-detail-page .content {
+            flex: 1;
+            overflow-y: auto;
+            -webkit-overflow-scrolling: touch;
+            padding-bottom: 80px;
+        }
+
+        .detail-header {
+            background: linear-gradient(135deg, var(--red-primary) 0%, var(--red-dark) 100%);
+            padding: 15px 20px;
+            padding-top: calc(15px + env(safe-area-inset-top));
+            color: #fff;
+            display: flex;
+            align-items: center;
+            flex-shrink: 0;
+        }
+
+        .detail-header i {
+            font-size: 24px;
+            cursor: pointer;
+            margin-right: 15px;
+        }
+
+        .detail-header h2 {
+            font-size: 18px;
+            font-weight: bold;
+            flex: 1;
+        }
+
+        .detail-post {
+            background: #fff;
+            padding: 20px;
+        }
+
+        .detail-post-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 15px;
+        }
+
+        .detail-post-avatar {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--red-primary) 0%, var(--red-dark) 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #fff;
+            font-size: 22px;
+        }
+
+        .detail-post-user-info h4 {
+            font-size: 16px;
+            margin-bottom: 3px;
+        }
+
+        .detail-post-user-info p {
+            font-size: 12px;
+            color: var(--text-gray);
+        }
+
+        .detail-post-topic {
+            display: inline-block;
+            background: rgba(196, 30, 58, 0.1);
+            color: var(--red-primary);
+            padding: 4px 12px;
+            border-radius: 15px;
+            font-size: 12px;
+            margin-bottom: 12px;
+        }
+
+        .detail-post-title {
+            font-size: 20px;
+            font-weight: bold;
+            margin-bottom: 15px;
+            line-height: 1.4;
+        }
+
+        .detail-post-text {
+            font-size: 15px;
+            line-height: 1.8;
+            color: #444;
+            margin-bottom: 15px;
+        }
+
+        .detail-post-images {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 8px;
+            margin-bottom: 15px;
+        }
+
+        .detail-post-image {
+            aspect-ratio: 1;
+            background: linear-gradient(135deg, var(--red-light) 0%, var(--red-primary) 100%);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #fff;
+            font-size: 36px;
+            overflow: hidden;
+        }
+
+        .detail-post-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .detail-post-actions {
+            display: flex;
+            justify-content: space-around;
+            padding: 15px 0;
+            border-top: 1px solid #f0f0f0;
+            border-bottom: 8px solid var(--bg-light);
+        }
+
+        .detail-post-action {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            color: var(--text-gray);
+            font-size: 14px;
+            cursor: pointer;
+        }
+
+        .detail-post-action.liked {
+            color: var(--red-primary);
+        }
+
+        .comments-section {
+            background: #fff;
+            padding: 20px;
+        }
+
+        .comments-header {
+            font-size: 17px;
+            font-weight: bold;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .comment-item {
+            display: flex;
+            gap: 12px;
+            padding: 15px 0;
+            border-bottom: 1px solid #f5f5f5;
+        }
+
+        .comment-item:last-child {
+            border-bottom: none;
+        }
+
+        .comment-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--gold) 0%, #B8860B 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #fff;
+            font-size: 18px;
+            flex-shrink: 0;
+        }
+
+        .comment-content {
+            flex: 1;
+        }
+
+        .comment-user {
+            font-size: 14px;
+            font-weight: bold;
+            margin-bottom: 5px;
+            color: var(--text-dark);
+        }
+
+        .comment-text {
+            font-size: 14px;
+            line-height: 1.6;
+            color: #555;
+            margin-bottom: 8px;
+        }
+
+        .comment-time {
+            font-size: 12px;
+            color: var(--text-gray);
+        }
+
+        .comment-input-wrapper {
+            position: fixed;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100%;
+            max-width: 430px;
+            background: #fff;
+            padding: 12px 15px;
+            padding-bottom: calc(12px + env(safe-area-inset-bottom));
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            box-shadow: 0 -2px 10px rgba(0,0,0,0.1);
+            z-index: 100;
+        }
+
+        .comment-input {
+            flex: 1;
+            padding: 12px 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 25px;
+            font-size: 14px;
+            outline: none;
+            transition: all 0.3s;
+        }
+
+        .comment-input:focus {
+            border-color: var(--red-primary);
+        }
+
+        .comment-send-btn {
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--red-primary) 0%, var(--red-dark) 100%);
+            color: #fff;
+            border: none;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            transition: transform 0.2s;
+        }
+
+        .comment-send-btn:active {
+            transform: scale(0.95);
+        }
+
+        .post-card {
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .post-card:active {
+            transform: scale(0.98);
+        }
+
+        .card {
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .card:active {
+            transform: scale(0.98);
+        }
+
+        .site-detail-hero {
+            height: 200px;
+            background: linear-gradient(135deg, var(--red-primary) 0%, var(--red-dark) 100%);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .site-detail-hero img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            opacity: 0.8;
+        }
+
+        .site-detail-hero-overlay {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            padding: 20px;
+            background: linear-gradient(transparent, rgba(0,0,0,0.7));
+            color: #fff;
+        }
+
+        .site-detail-hero-overlay h1 {
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .site-detail-hero-overlay p {
+            font-size: 14px;
+            opacity: 0.9;
+        }
+
+        .site-detail-section {
+            padding: 20px;
+            border-bottom: 8px solid var(--bg-light);
+        }
+
+        .site-detail-section:last-child {
+            border-bottom: none;
+        }
+
+        .site-detail-section-title {
+            font-size: 18px;
+            font-weight: bold;
+            color: var(--red-primary);
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .site-detail-section-title i {
+            font-size: 22px;
+        }
+
+        .site-detail-text {
+            font-size: 15px;
+            line-height: 1.8;
+            color: var(--text-dark);
+        }
+
+        .site-detail-images {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        .site-detail-image {
+            aspect-ratio: 1;
+            border-radius: 10px;
+            overflow: hidden;
+            background: var(--bg-light);
+        }
+
+        .site-detail-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .ai-photo-section {
+            margin-top: 15px;
+        }
+
+        .ai-photo-preview {
+            width: 100%;
+            aspect-ratio: 4/3;
+            border-radius: 12px;
+            overflow: hidden;
+            background: linear-gradient(135deg, #FFF8F0 0%, #FFE5E5 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 2px dashed #C41E3A;
+        }
+
+        .ai-photo-placeholder {
+            text-align: center;
+            color: #C41E3A;
+        }
+
+        .ai-photo-placeholder i {
+            font-size: 48px;
+            display: block;
+            margin-bottom: 10px;
+        }
+
+        .ai-photo-placeholder p {
+            font-size: 14px;
+            color: #666;
+        }
+
+        .ai-photo-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        .ai-photo-btn {
+            flex: 1;
+            padding: 12px;
+            border: none;
+            border-radius: 10px;
+            font-size: 13px;
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 5px;
+            transition: all 0.3s;
+        }
+
+        .ai-photo-btn.upload {
+            background: #E3F2FD;
+            color: #1976D2;
+        }
+
+        .ai-photo-btn.generate {
+            background: #FFF3E0;
+            color: #F57C00;
+        }
+
+        .ai-photo-btn.download {
+            background: #E8F5E9;
+            color: #388E3C;
+        }
+
+        .ai-photo-btn:active {
+            transform: scale(0.95);
+        }
+
+        .ai-photo-btn i {
+            font-size: 20px;
+        }
+
+        .site-nav-section {
+            padding: 20px;
+            background: var(--bg-light);
+        }
+
+        .site-nav-btn {
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(135deg, var(--red-primary) 0%, var(--red-dark) 100%);
+            color: #fff;
+            border: none;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            box-shadow: 0 4px 15px rgba(196, 30, 58, 0.3);
+            transition: transform 0.2s;
+        }
+
+        .site-nav-btn:active {
+            transform: scale(0.98);
+        }
+
+        .site-nav-btn i {
+            font-size: 20px;
+        }
+
+        .site-nav-modes {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        .site-nav-mode {
+            flex: 1;
+            padding: 12px 10px;
+            background: #fff;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .site-nav-mode.active {
+            border-color: var(--red-primary);
+            background: rgba(196, 30, 58, 0.1);
+            color: var(--red-primary);
+        }
+
+        .site-nav-mode i {
+            font-size: 22px;
+            display: block;
+            margin-bottom: 4px;
+        }
+
+        .site-nav-mode span {
+            font-size: 12px;
+        }
+    </style>
+</head>
+<body>
+    <div class="app-container">
+        <div class="page login-page active" id="loginPage">
+            <div class="login-logo">
+                <img src="图片素材/LOGO.jpg" alt="红途LOGO">
+                <h1>红 途</h1>
+                <p>红色文化传承平台</p>
+            </div>
+            <div class="login-form">
+                <div class="input-group">
+                    <label>手机号</label>
+                    <div class="input-wrapper">
+                        <i class="ri-smartphone-line"></i>
+                        <input type="tel" id="phoneInput" placeholder="请输入手机号" maxlength="11">
+                    </div>
+                </div>
+                <div class="input-group">
+                    <label>验证码</label>
+                    <div class="input-wrapper">
+                        <i class="ri-shield-keyhole-line"></i>
+                        <input type="text" id="codeInput" placeholder="请输入验证码" maxlength="6">
+                        <button class="code-btn" id="codeBtn" onclick="sendCode()">获取验证码</button>
+                    </div>
+                </div>
+                <button class="login-btn" onclick="login()">
+                    <i class="ri-login-box-line"></i> 登录
+                </button>
+                <button class="guest-btn" onclick="enterAsGuest()">
+                    游客模式体验
+                </button>
+            </div>
+        </div>
+
+        <div class="page map-page" id="mapPage">
+            <div class="header">
+                <div class="header-title">
+                    <img src="图片素材/LOGO.jpg" alt="LOGO">
+                    江西红色文旅地图
+                </div>
+                <i class="ri-map-line" style="font-size: 22px; cursor: pointer;" onclick="showBaiduMap()" title="显示地图"></i>
+            </div>
+            <div class="content">
+                <div class="map-container">
+                    <div class="search-bar">
+                        <i class="ri-search-line"></i>
+                        <input type="text" id="searchInput" placeholder="搜索红色景点..." oninput="handleSearch(this.value)">
+                    </div>
+                    <div class="search-results" id="searchResults"></div>
+                    <div class="grid-lines" id="gridLines">
+                    </div>
+                    <div id="baidu-container"></div>
+                    <div class="coord-display" id="coordDisplay">
+                        <i class="ri-map-pin-line"></i> 经度: <span id="lngDisplay">--</span> | 纬度: <span id="latDisplay">--</span>
+                    </div>
+                    <div class="map-float-btns">
+                        <button class="float-btn" onclick="locateMe()" title="智能定位">
+                            <i class="ri-focus-3-line"></i>
+                        </button>
+                        <button class="float-btn voice" id="voiceBtn" onclick="toggleVoice()" title="AI语音导航">
+                            <i class="ri-mic-line"></i>
+                        </button>
+                    </div>
+                    <div class="route-panel" id="routePanel">
+                        <div class="route-header">
+                            <span class="route-title">路线规划</span>
+                            <span class="route-close" onclick="closeRoutePanel()"><i class="ri-close-line"></i></span>
+                        </div>
+                        <div class="route-modes">
+                            <button class="route-mode active" data-mode="driving">
+                                <i class="ri-car-line"></i><br>驾车
+                            </button>
+                            <button class="route-mode" data-mode="transfer">
+                                <i class="ri-bus-line"></i><br>公交
+                            </button>
+                            <button class="route-mode" data-mode="walking">
+                                <i class="ri-walk-line"></i><br>步行
+                            </button>
+                        </div>
+                        <div class="route-info">
+                            <div class="route-info-item">
+                                <div class="route-info-value" id="routeTime">25分钟</div>
+                                <div class="route-info-label">预计时间</div>
+                            </div>
+                            <div class="route-info-item">
+                                <div class="route-info-value" id="routeDistance">12.5公里</div>
+                                <div class="route-info-label">路程距离</div>
+                            </div>
+                            <div class="route-info-item">
+                                <div class="route-info-value" id="routeLight">8个</div>
+                                <div class="route-info-label">红绿灯</div>
+                            </div>
+                        </div>
+                        <button class="start-nav-btn" onclick="startNavigation()">
+                            <i class="ri-navigation-line"></i> 开始AI导航
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <div class="bottom-nav">
+                <div class="nav-item active" onclick="switchPage('mapPage')">
+                    <i class="ri-map-pin-line"></i>
+                    <span>地图</span>
+                </div>
+                <div class="nav-item" onclick="switchPage('learningPage')">
+                    <i class="ri-book-open-line"></i>
+                    <span>学习</span>
+                </div>
+                <div class="nav-item" onclick="switchPage('communityPage')">
+                    <i class="ri-chat-3-line"></i>
+                    <span>社区</span>
+                </div>
+                <div class="nav-item" onclick="switchPage('profilePage')">
+                    <i class="ri-user-line"></i>
+                    <span>我的</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="page learning-page" id="learningPage">
+            <div class="header">
+                <div class="header-title">
+                    <img src="图片素材/LOGO.jpg" alt="LOGO">
+                    红色文化学习
+                </div>
+                <i class="ri-notification-3-line" style="font-size: 22px;"></i>
+            </div>
+            <div class="content">
+                <div class="carousel" id="carousel">
+                    <div class="carousel-inner" id="carouselInner">
+                        <div class="carousel-item">
+                            <div class="carousel-item-bg" style="padding: 0; overflow: hidden; position: relative;">
+                                <img src="图片素材/建党105周年.jpg" alt="庆祝中国共产党成立105周年" style="width: 100%; height: 100%; object-fit: cover;">
+                                <div style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; display: flex; flex-direction: column; justify-content: center; align-items: center; color: #fff; text-align: center; padding: 20px; background: rgba(0,0,0,0.4);">
+                                    <h4 style="font-size: 18px; margin-bottom: 5px;">庆祝中国共产党成立105周年</h4>
+                                    <p style="font-size: 13px; opacity: 0.9;">不忘初心，牢记使命，永远奋斗</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="carousel-item">
+                            <div class="carousel-item-bg" style="padding: 0; overflow: hidden; position: relative;">
+                                <img src="图片素材/党史学习教育.jpg" alt="党史学习教育专题" style="width: 100%; height: 100%; object-fit: cover;">
+                                <div style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; display: flex; flex-direction: column; justify-content: center; align-items: center; color: #fff; text-align: center; padding: 20px; background: rgba(0,0,0,0.4);">
+                                    <h4 style="font-size: 18px; margin-bottom: 5px;">党史学习教育专题</h4>
+                                    <p style="font-size: 13px; opacity: 0.9;">学史明理、学史增信、学史崇德、学史力行</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="carousel-item">
+                            <div class="carousel-item-bg" style="padding: 0; overflow: hidden; position: relative;">
+                                <img src="图片素材/井冈山精神.jpg" alt="井冈山精神" style="width: 100%; height: 100%; object-fit: cover;">
+                                <div style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; display: flex; flex-direction: column; justify-content: center; align-items: center; color: #fff; text-align: center; padding: 20px; background: rgba(0,0,0,0.4);">
+                                    <h4 style="font-size: 18px; margin-bottom: 5px;">井冈山精神</h4>
+                                    <p style="font-size: 13px; opacity: 0.9;">坚定信念、艰苦奋斗、实事求是、敢闯新路</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="carousel-item">
+                            <div class="carousel-item-bg" style="padding: 0; overflow: hidden; position: relative;">
+                                <img src="图片素材/向革命精神致敬.jpg" alt="向革命精神致敬" style="width: 100%; height: 100%; object-fit: cover;">
+                                <div style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; display: flex; flex-direction: column; justify-content: center; align-items: center; color: #fff; text-align: center; padding: 20px; background: rgba(0,0,0,0.4);">
+                                    <h4 style="font-size: 18px; margin-bottom: 5px;">向革命精神致敬</h4>
+                                    <p style="font-size: 13px; opacity: 0.9;">缅怀革命先烈，传承红色基因</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="carousel-item">
+                            <div class="carousel-item-bg" style="padding: 0; overflow: hidden; position: relative;">
+                                <img src="图片素材/红色研学活动.jpg" alt="红色研学活动" style="width: 100%; height: 100%; object-fit: cover;">
+                                <div style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; display: flex; flex-direction: column; justify-content: center; align-items: center; color: #fff; text-align: center; padding: 20px; background: rgba(0,0,0,0.4);">
+                                    <h4 style="font-size: 18px; margin-bottom: 5px;">红色研学活动</h4>
+                                    <p style="font-size: 13px; opacity: 0.9;">走进红色圣地，感受革命精神</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="carousel-dots" id="carouselDots"></div>
+                </div>
+                
+                <div class="tabs">
+                    <div class="tab active" onclick="switchTab('learn')">学习红色文化</div>
+                    <div class="tab" onclick="switchTab('inherit')">传承红色文化</div>
+                </div>
+                
+                <div class="tab-content active" id="learnTab">
+                    <div class="card">
+                        <div class="card-hero">
+                            <div class="card-hero-avatar" style="padding: 0; font-size: 0;"><img src="图片素材2/毛泽东.jpg" alt="毛泽东" style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%;"></div>
+                            <div class="card-hero-info">
+                                <div class="card-hero-name">毛泽东</div>
+                                <div class="card-hero-title">伟大的马克思主义者，无产阶级革命家</div>
+                                <div class="card-hero-desc">毛泽东（1893年12月26日-1976年9月9日），字润之，湖南湘潭人。中国共产党、中国人民解放军和中华人民共和国的主要缔造者和领导人。</div>
+                            </div>
+                        </div>
+                        <div class="card-content">
+                            <span class="card-tag">英雄事迹</span>
+                            <h3 class="card-title">井冈山革命根据地的创建</h3>
+                            <p class="card-desc">1927年10月，毛泽东率领秋收起义部队到达井冈山，创建了中国第一个农村革命根据地，开创了"农村包围城市"的革命道路...</p>
+                            <div class="card-footer">
+                                <div class="card-stats">
+                                    <span><i class="ri-eye-line"></i> 128.5万</span>
+                                    <span><i class="ri-heart-line"></i> 32.8万</span>
+                                </div>
+                                <span style="color: var(--red-primary); font-size: 13px;">阅读全文 →</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="card">
+                        <div class="card-hero">
+                            <div class="card-hero-avatar" style="padding: 0; font-size: 0;"><img src="图片素材2/周恩来.jpg" alt="周恩来" style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%;"></div>
+                            <div class="card-hero-info">
+                                <div class="card-hero-name">周恩来</div>
+                                <div class="card-hero-title">伟大的无产阶级革命家、政治家、军事家</div>
+                                <div class="card-hero-desc">周恩来（1898年3月5日-1976年1月8日），字翔宇，江苏淮安人。中国人民解放军主要创建人之一，中华人民共和国开国元勋。</div>
+                            </div>
+                        </div>
+                        <div class="card-content">
+                            <span class="card-tag">英雄事迹</span>
+                            <h3 class="card-title">南昌起义的领导者</h3>
+                            <p class="card-desc">1927年8月1日，周恩来领导发动了著名的南昌起义，打响了武装反抗国民党反动派的第一枪，标志着中国共产党独立领导革命战争的开始...</p>
+                            <div class="card-footer">
+                                <div class="card-stats">
+                                    <span><i class="ri-eye-line"></i> 95.2万</span>
+                                    <span><i class="ri-heart-line"></i> 28.6万</span>
+                                </div>
+                                <span style="color: var(--red-primary); font-size: 13px;">阅读全文 →</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="card">
+                        <div class="card-hero">
+                            <div class="card-hero-avatar" style="padding: 0; font-size: 0;"><img src="图片素材2/方志敏.jpg" alt="方志敏" style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%;"></div>
+                            <div class="card-hero-info">
+                                <div class="card-hero-name">方志敏</div>
+                                <div class="card-hero-title">无产阶级革命家、军事家、农民运动领袖</div>
+                                <div class="card-hero-desc">方志敏（1899年8月21日-1935年8月6日），江西弋阳人。遗著《可爱的中国》《清贫》等成为爱国主义教育的珍贵教材。</div>
+                            </div>
+                        </div>
+                        <div class="card-content">
+                            <span class="card-tag">英雄事迹</span>
+                            <h3 class="card-title">可爱的中国</h3>
+                            <p class="card-desc">在狱中，方志敏以惊人的毅力和对祖国的无限热爱，写下了《可爱的中国》等不朽篇章，表达了对祖国美好未来的憧憬...</p>
+                            <div class="card-footer">
+                                <div class="card-stats">
+                                    <span><i class="ri-eye-line"></i> 256.8万</span>
+                                    <span><i class="ri-heart-line"></i> 67.2万</span>
+                                </div>
+                                <span style="color: var(--red-primary); font-size: 13px;">阅读全文 →</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="card">
+                        <div class="video-card">
+                            <div class="video-thumb" style="padding: 0;">
+                                <img src="图片素材2/光辉历程1.jpg" alt="光辉历程" style="width: 100%; height: 100%; object-fit: cover;">
+                            </div>
+                            <div class="video-info">
+                                <h4 class="video-title">党史教育专题片：光辉历程</h4>
+                                <p class="video-meta"><i class="ri-time-line"></i> 45:30 · <i class="ri-play-circle-line"></i> 892.5万次播放</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="card">
+                        <div class="video-card">
+                            <div class="video-thumb" style="padding: 0;">
+                                <img src="图片素材2/井刚山斗争封面.jpg" alt="井冈山斗争" style="width: 100%; height: 100%; object-fit: cover;">
+                            </div>
+                            <div class="video-info">
+                                <h4 class="video-title">井冈山斗争纪实</h4>
+                                <p class="video-meta"><i class="ri-time-line"></i> 32:15 · <i class="ri-play-circle-line"></i> 567.3万次播放</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="card">
+                        <div class="card-image" style="padding: 0;">
+                            <img src="图片素材2/瑞金红色故都.jpg" alt="瑞金红色故都" style="width: 100%; height: 100%; object-fit: cover;">
+                        </div>
+                        <div class="card-content">
+                            <span class="card-tag">图文专栏</span>
+                            <h3 class="card-title">瑞金：红色故都 共和国摇篮</h3>
+                            <p class="card-desc">瑞金是中华苏维埃共和国临时中央政府诞生地，是全国著名的红色旅游城市和革命传统教育名城...</p>
+                            <div class="card-footer">
+                                <div class="card-stats">
+                                    <span><i class="ri-eye-line"></i> 89.6万</span>
+                                    <span><i class="ri-heart-line"></i> 21.5万</span>
+                                </div>
+                                <span style="color: var(--red-primary); font-size: 13px;">阅读全文 →</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="tab-content" id="inheritTab">
+                    <div class="card">
+                        <div class="activity-card">
+                            <div class="activity-icon" style="padding: 0; font-size: 0;">
+                                <img src="图片素材2/井冈山活动1.jpg" alt="井冈山活动" style="width: 60px; height: 60px; object-fit: cover; border-radius: 12px;">
+                            </div>
+                            <div class="activity-content">
+                                <h4 class="activity-title">红色研学之旅 - 井冈山行</h4>
+                                <p class="activity-desc">走进中国革命摇篮，感受井冈山精神</p>
+                                <span class="activity-time"><i class="ri-calendar-line"></i> 2026年4月15日 - 4月20日</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="card">
+                        <div class="activity-card">
+                            <div class="activity-icon" style="padding: 0; font-size: 0;">
+                                <img src="图片素材2/百年奋斗史.jpg" alt="百年奋斗史" style="width: 60px; height: 60px; object-fit: cover; border-radius: 12px;">
+                            </div>
+                            <div class="activity-content">
+                                <h4 class="activity-title">红色主题征文大赛</h4>
+                                <p class="activity-desc">以笔为矛，书写红色记忆</p>
+                                <span class="activity-time"><i class="ri-time-line"></i> 报名截止：2026年5月1日</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="card">
+                        <div class="activity-card">
+                            <div class="activity-icon" style="padding: 0; font-size: 0;">
+                                <img src="图片素材2/井冈山活动2.jpg" alt="井冈山活动" style="width: 60px; height: 60px; object-fit: cover; border-radius: 12px;">
+                            </div>
+                            <div class="activity-content">
+                                <h4 class="activity-title">红色书法作品展览</h4>
+                                <p class="activity-desc">展示优秀红色主题书法作品</p>
+                                <span class="activity-time"><i class="ri-time-line"></i> 2026年4月20日 - 5月10日</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="card">
+                        <div class="card-image" style="padding: 0;">
+                            <img src="图片素材2/红色故都1.jpg" alt="红色故都" style="width: 100%; height: 100%; object-fit: cover;">
+                        </div>
+                        <div class="card-content">
+                            <span class="card-tag">文化作品</span>
+                            <h3 class="card-title">红色摄影作品展</h3>
+                            <p class="card-desc">用镜头记录红色圣地，展现新时代风采...</p>
+                            <div class="card-footer">
+                                <div class="card-stats">
+                                    <span><i class="ri-image-line"></i> 156幅作品</span>
+                                    <span><i class="ri-heart-line"></i> 8.2万</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="card">
+                        <div class="activity-card">
+                            <div class="activity-icon" style="padding: 0; font-size: 0;">
+                                <img src="图片素材2/井冈山活动3.jpg" alt="井冈山活动" style="width: 60px; height: 60px; object-fit: cover; border-radius: 12px;">
+                            </div>
+                            <div class="activity-content">
+                                <h4 class="activity-title">红色文化志愿者招募</h4>
+                                <p class="activity-desc">传承红色基因，弘扬革命精神</p>
+                                <span class="activity-time"><i class="ri-user-add-line"></i> 长期招募中</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="bottom-nav">
+                <div class="nav-item" onclick="switchPage('mapPage')">
+                    <i class="ri-map-pin-line"></i>
+                    <span>地图</span>
+                </div>
+                <div class="nav-item active" onclick="switchPage('learningPage')">
+                    <i class="ri-book-open-line"></i>
+                    <span>学习</span>
+                </div>
+                <div class="nav-item" onclick="switchPage('communityPage')">
+                    <i class="ri-chat-3-line"></i>
+                    <span>社区</span>
+                </div>
+                <div class="nav-item" onclick="switchPage('profilePage')">
+                    <i class="ri-user-line"></i>
+                    <span>我的</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="page community-page" id="communityPage">
+            <div class="header">
+                <div class="header-title">
+                    <img src="图片素材/LOGO.jpg" alt="LOGO">
+                    红色文化论坛
+                </div>
+                <i class="ri-search-line" style="font-size: 22px;"></i>
+            </div>
+            <div class="content">
+                <div class="topic-chips">
+                    <button class="topic-chip active" data-topic="all">全部</button>
+                    <button class="topic-chip" data-topic="history">历史讨论</button>
+                    <button class="topic-chip" data-topic="travel">旅行分享</button>
+                    <button class="topic-chip" data-topic="study">学习心得</button>
+                    <button class="topic-chip" data-topic="activity">活动交流</button>
+                </div>
+                
+                <div style="padding: 0 15px;" id="postsContainer">
+                    <div class="post-card" data-topic="travel">
+                        <div class="post-header">
+                            <div class="post-avatar">红</div>
+                            <div class="post-user-info">
+                                <h4>红色旅行者</h4>
+                                <p>2小时前 · 旅行分享</p>
+                            </div>
+                        </div>
+                        <span class="post-topic">#红色之旅 #井冈山</span>
+                        <div class="post-content">
+                            <h4 class="post-title">今天参观了井冈山革命根据地，太震撼了！</h4>
+                            <p class="post-text">站在江西这片红色土地上，仿佛能感受到当年革命先烈们的奋斗精神。井冈山是中国革命的摇篮，这里的每一寸土地都诉说着光荣的历史。黄洋界的炮声仿佛还在耳边回响，八角楼的灯光永远照亮着我们前行的道路。强烈推荐大家来井冈山感受红色文化！</p>
+                            <div class="post-images">
+                                <div class="post-image"><img src="图片素材/井冈山1.jpg" alt="井冈山1"></div>
+                                <div class="post-image"><img src="图片素材/井冈山2.jpg" alt="井冈山2"></div>
+                                <div class="post-image"><img src="图片素材/井冈山3.jpg" alt="井冈山3"></div>
+                            </div>
+                        </div>
+                        <div class="post-actions">
+                            <div class="post-action" onclick="toggleLike(this)">
+                                <i class="ri-heart-line"></i> 128
+                            </div>
+                            <div class="post-action">
+                                <i class="ri-chat-1-line"></i> 36
+                            </div>
+                            <div class="post-action">
+                                <i class="ri-star-line"></i> 收藏
+                            </div>
+                            <div class="post-action">
+                                <i class="ri-share-forward-line"></i> 分享
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="post-card" data-topic="history">
+                        <div class="post-header">
+                            <div class="post-avatar">纪</div>
+                            <div class="post-user-info">
+                                <h4>历史研究者</h4>
+                                <p>昨天 · 历史讨论</p>
+                            </div>
+                        </div>
+                        <span class="post-topic">#南昌起义 #八一起义</span>
+                        <div class="post-content">
+                            <h4 class="post-title">南昌起义：人民军队诞生的光辉时刻</h4>
+                            <p class="post-text">1927年8月1日，南昌城头一声枪响，拉开了我们党武装反抗国民党反动派的大幕。这是中国共产党历史上的一个伟大事件，是中国革命史上的一个伟大事件，也是中华民族发展史上的一个伟大事件。南昌起义连同秋收起义、广州起义以及其他许多地区的武装起义，标志着中国共产党独立领导革命战争、创建人民军队的开端，开启了中国革命新纪元。</p>
+                            <div class="post-images">
+                                <div class="post-image"><img src="图片素材/素材1.jpg" alt="素材1"></div>
+                                <div class="post-image"><img src="图片素材/素材2.jpg" alt="素材2"></div>
+                            </div>
+                        </div>
+                        <div class="post-actions">
+                            <div class="post-action" onclick="toggleLike(this)">
+                                <i class="ri-heart-line"></i> 523
+                            </div>
+                            <div class="post-action">
+                                <i class="ri-chat-1-line"></i> 178
+                            </div>
+                            <div class="post-action">
+                                <i class="ri-star-line"></i> 收藏
+                            </div>
+                            <div class="post-action">
+                                <i class="ri-share-forward-line"></i> 分享
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="post-card" data-topic="study">
+                        <div class="post-header">
+                            <div class="post-avatar">学</div>
+                            <div class="post-user-info">
+                                <h4>学史明理</h4>
+                                <p>3天前 · 学习心得</p>
+                            </div>
+                        </div>
+                        <span class="post-topic">#党史学习 #方志敏</span>
+                        <div class="post-content">
+                            <h4 class="post-title">读《可爱的中国》有感：信仰的力量</h4>
+                            <p class="post-text">再次研读方志敏烈士的《可爱的中国》，每次都热泪盈眶。在阴暗的牢房里，在生与死的考验面前，方志敏丝毫没有动摇对马克思主义的信仰，丝毫没有动摇对共产主义的信念。他用敌人劝降的纸笔，写下了《可爱的中国》《清贫》等一篇又一篇对党和人民的无限忠诚之作。这种信仰的力量，永远值得我们学习！</p>
+                            <div class="post-images">
+                                <div class="post-image"><img src="图片素材/可爱的中国1.jpg" alt="可爱的中国1"></div>
+                                <div class="post-image"><img src="图片素材/可爱的中国2.jpg" alt="可爱的中国2"></div>
+                            </div>
+                        </div>
+                        <div class="post-actions">
+                            <div class="post-action liked" onclick="toggleLike(this)">
+                                <i class="ri-heart-fill"></i> 856
+                            </div>
+                            <div class="post-action">
+                                <i class="ri-chat-1-line"></i> 234
+                            </div>
+                            <div class="post-action">
+                                <i class="ri-star-line"></i> 收藏
+                            </div>
+                            <div class="post-action">
+                                <i class="ri-share-forward-line"></i> 分享
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="post-card" data-topic="activity">
+                        <div class="post-header">
+                            <div class="post-avatar">活</div>
+                            <div class="post-user-info">
+                                <h4>红色活动组织者</h4>
+                                <p>4天前 · 活动交流</p>
+                            </div>
+                        </div>
+                        <span class="post-topic">#红色研学 #志愿活动</span>
+                        <div class="post-content">
+                            <h4 class="post-title">招募！"重走长征路"红色研学活动开始报名啦！</h4>
+                            <p class="post-text">为深入学习贯彻习近平新时代中国特色社会主义思想，传承红色基因，我们将组织"重走长征路"红色研学活动。活动内容包括：于都长征出发地祭奠、瑞金苏维埃旧址参观、井冈山革命传统教育等。时间：2026年4月15日-20日，报名截止：4月5日。欢迎热爱红色文化的朋友们积极报名！</p>
+                            <div class="post-images">
+                                <div class="post-image"><img src="图片素材/重走长征路1.jpg" alt="重走长征路1"></div>
+                                <div class="post-image"><img src="图片素材/重走长征路2.jpg" alt="重走长征路2"></div>
+                                <div class="post-image"><img src="图片素材/重走长征路3.jpg" alt="重走长征路3"></div>
+                            </div>
+                        </div>
+                        <div class="post-actions">
+                            <div class="post-action" onclick="toggleLike(this)">
+                                <i class="ri-heart-line"></i> 367
+                            </div>
+                            <div class="post-action">
+                                <i class="ri-chat-1-line"></i> 125
+                            </div>
+                            <div class="post-action">
+                                <i class="ri-star-line"></i> 收藏
+                            </div>
+                            <div class="post-action">
+                                <i class="ri-share-forward-line"></i> 分享
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="post-card" data-topic="travel">
+                        <div class="post-header">
+                            <div class="post-avatar">瑞</div>
+                            <div class="post-user-info">
+                                <h4>瑞金红都人</h4>
+                                <p>5天前 · 旅行分享</p>
+                            </div>
+                        </div>
+                        <span class="post-topic">#瑞金 #共和国摇篮</span>
+                        <div class="post-content">
+                            <h4 class="post-title">打卡瑞金叶坪革命旧址群：共和国从这里走来</h4>
+                            <p class="post-text">作为瑞金人，每次带外地朋友来叶坪都感到无比自豪！这里是中华苏维埃共和国临时中央政府所在地，是人民共和国的摇篮。一苏大会址、红军烈士纪念塔、红军检阅台...每一处都诉说着那段峥嵘岁月。欢迎大家来瑞金感受红色文化！</p>
+                            <div class="post-images">
+                                <div class="post-image"><img src="图片素材/瑞金1.jpg" alt="瑞金1"></div>
+                                <div class="post-image"><img src="图片素材/瑞金2.jpg" alt="瑞金2"></div>
+                            </div>
+                        </div>
+                        <div class="post-actions">
+                            <div class="post-action" onclick="toggleLike(this)">
+                                <i class="ri-heart-line"></i> 289
+                            </div>
+                            <div class="post-action">
+                                <i class="ri-chat-1-line"></i> 92
+                            </div>
+                            <div class="post-action">
+                                <i class="ri-star-line"></i> 收藏
+                            </div>
+                            <div class="post-action">
+                                <i class="ri-share-forward-line"></i> 分享
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="post-card" data-topic="history">
+                        <div class="post-header">
+                            <div class="post-avatar">三</div>
+                            <div class="post-user-info">
+                                <h4>三湾后人</h4>
+                                <p>6天前 · 历史讨论</p>
+                            </div>
+                        </div>
+                        <span class="post-topic">#三湾改编 #支部建在连上</span>
+                        <div class="post-content">
+                            <h4 class="post-title">三湾改编：人民军队建设的伟大起点</h4>
+                            <p class="post-text">1927年9月29日，毛泽东率领秋收起义部队来到江西永新县三湾村，进行了著名的三湾改编。三湾改编创造性地确立了"支部建在连上"、"官兵平等"等一整套崭新的治军方略，从政治上组织上保证了党对军队的绝对领导，是我党建设新型人民军队最早的一次成功探索和实践。</p>
+                            <div class="post-images">
+                                <div class="post-image"><img src="图片素材/素材1.jpg" alt="素材1"></div>
+                            </div>
+                        </div>
+                        <div class="post-actions">
+                            <div class="post-action" onclick="toggleLike(this)">
+                                <i class="ri-heart-line"></i> 412
+                            </div>
+                            <div class="post-action">
+                                <i class="ri-chat-1-line"></i> 134
+                            </div>
+                            <div class="post-action">
+                                <i class="ri-star-line"></i> 收藏
+                            </div>
+                            <div class="post-action">
+                                <i class="ri-share-forward-line"></i> 分享
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="post-card" data-topic="activity">
+                        <div class="post-header">
+                            <div class="post-avatar">志</div>
+                            <div class="post-user-info">
+                                <h4>红色志愿者</h4>
+                                <p>1周前 · 活动交流</p>
+                            </div>
+                        </div>
+                        <span class="post-topic">#志愿服务 #红色宣讲</span>
+                        <div class="post-content">
+                            <h4 class="post-title">红色文化宣讲志愿者招募中！</h4>
+                            <p class="post-text">为更好地传承红色基因，讲好红色故事，我们面向社会招募红色文化宣讲志愿者。如果你热爱红色文化，有一定的宣讲能力，欢迎加入我们！服务内容包括：红色景点讲解、红色文化进校园、社区红色故事分享会等。让我们一起做红色文化的传播者！</p>
+                            <div class="post-images">
+                                <div class="post-image"><img src="图片素材/素材2.jpg" alt="素材2"></div>
+                            </div>
+                        </div>
+                        <div class="post-actions">
+                            <div class="post-action" onclick="toggleLike(this)">
+                                <i class="ri-heart-line"></i> 198
+                            </div>
+                            <div class="post-action">
+                                <i class="ri-chat-1-line"></i> 67
+                            </div>
+                            <div class="post-action">
+                                <i class="ri-star-line"></i> 收藏
+                            </div>
+                            <div class="post-action">
+                                <i class="ri-share-forward-line"></i> 分享
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="post-card" data-topic="study">
+                        <div class="post-header">
+                            <div class="post-avatar">于</div>
+                            <div class="post-user-info">
+                                <h4>于都后生</h4>
+                                <p>1周前 · 学习心得</p>
+                            </div>
+                        </div>
+                        <span class="post-topic">#长征精神 #于都</span>
+                        <div class="post-content">
+                            <h4 class="post-title">学习长征精神：不忘初心，走好新时代的长征路</h4>
+                            <p class="post-text">作为于都人，从小听着长征的故事长大。8.6万红军将士从于都河畔出发，踏上了二万五千里长征的漫漫征途。长征这一人类历史上的伟大壮举，留给我们最可宝贵的精神财富，就是中国共产党人和红军将士用生命和热血铸就的伟大长征精神。新时代，我们要继承和弘扬长征精神，不忘初心，继续前进！</p>
+                            <div class="post-images">
+                                <div class="post-image"><img src="图片素材/长征精神1.jpg" alt="长征精神1"></div>
+                                <div class="post-image"><img src="图片素材/长征精神2.jpg" alt="长征精神2"></div>
+                                <div class="post-image"><img src="图片素材/长征精神3.jpg" alt="长征精神3"></div>
+                            </div>
+                        </div>
+                        <div class="post-actions">
+                            <div class="post-action" onclick="toggleLike(this)">
+                                <i class="ri-heart-line"></i> 634
+                            </div>
+                            <div class="post-action">
+                                <i class="ri-chat-1-line"></i> 189
+                            </div>
+                            <div class="post-action">
+                                <i class="ri-star-line"></i> 收藏
+                            </div>
+                            <div class="post-action">
+                                <i class="ri-share-forward-line"></i> 分享
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="fab show" onclick="alert('发布帖子功能')">
+                <i class="ri-add-line"></i>
+            </div>
+            <div class="bottom-nav">
+                <div class="nav-item" onclick="switchPage('mapPage')">
+                    <i class="ri-map-pin-line"></i>
+                    <span>地图</span>
+                </div>
+                <div class="nav-item" onclick="switchPage('learningPage')">
+                    <i class="ri-book-open-line"></i>
+                    <span>学习</span>
+                </div>
+                <div class="nav-item active" onclick="switchPage('communityPage')">
+                    <i class="ri-chat-3-line"></i>
+                    <span>社区</span>
+                </div>
+                <div class="nav-item" onclick="switchPage('profilePage')">
+                    <i class="ri-user-line"></i>
+                    <span>我的</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="page profile-page" id="profilePage">
+            <div class="header">
+                <div class="header-title">
+                    <img src="图片素材/LOGO.jpg" alt="LOGO">
+                    个人中心
+                </div>
+                <i class="ri-settings-3-line" style="font-size: 22px;"></i>
+            </div>
+            <div class="content">
+                <div class="profile-header">
+                    <div class="profile-avatar">红</div>
+                    <div class="profile-name" id="profileName">红色文化爱好者</div>
+                    <div class="profile-id">ID: 10086001</div>
+                </div>
+                
+                <div class="profile-stats">
+                    <div class="stat-item">
+                        <div class="stat-value">15</div>
+                        <div class="stat-label">收藏点位</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-value">32</div>
+                        <div class="stat-label">学习天数</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-value">128</div>
+                        <div class="stat-label">积分</div>
+                    </div>
+                </div>
+                
+                <div class="menu-list">
+                    <div class="menu-item">
+                        <i class="ri-bookmark-line"></i>
+                        <span>我的收藏</span>
+                        <i class="ri-arrow-right-s-line arrow"></i>
+                    </div>
+                    <div class="menu-item" onclick="openHistoryPage()">
+                        <i class="ri-history-line"></i>
+                        <span>学习记录</span>
+                        <i class="ri-arrow-right-s-line arrow"></i>
+                    </div>
+                    <div class="menu-item">
+                        <i class="ri-edit-line"></i>
+                        <span>我的帖子</span>
+                        <i class="ri-arrow-right-s-line arrow"></i>
+                    </div>
+                </div>
+                
+                <div class="menu-list">
+                    <div class="menu-item">
+                        <i class="ri-user-settings-line"></i>
+                        <span>个人资料</span>
+                        <i class="ri-arrow-right-s-line arrow"></i>
+                    </div>
+                    <div class="menu-item">
+                        <i class="ri-notification-2-line"></i>
+                        <span>消息通知</span>
+                        <i class="ri-arrow-right-s-line arrow"></i>
+                    </div>
+                    <div class="menu-item">
+                        <i class="ri-question-line"></i>
+                        <span>帮助中心</span>
+                        <i class="ri-arrow-right-s-line arrow"></i>
+                    </div>
+                    <div class="menu-item">
+                        <i class="ri-information-line"></i>
+                        <span>关于我们</span>
+                        <i class="ri-arrow-right-s-line arrow"></i>
+                    </div>
+                </div>
+                
+                <button class="logout-btn" onclick="logout()">
+                    <i class="ri-logout-box-line"></i> 退出登录
+                </button>
+            </div>
+            <div class="bottom-nav">
+                <div class="nav-item" onclick="switchPage('mapPage')">
+                    <i class="ri-map-pin-line"></i>
+                    <span>地图</span>
+                </div>
+                <div class="nav-item" onclick="switchPage('learningPage')">
+                    <i class="ri-book-open-line"></i>
+                    <span>学习</span>
+                </div>
+                <div class="nav-item" onclick="switchPage('communityPage')">
+                    <i class="ri-chat-3-line"></i>
+                    <span>社区</span>
+                </div>
+                <div class="nav-item active" onclick="switchPage('profilePage')">
+                    <i class="ri-user-line"></i>
+                    <span>我的</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="page hero-detail-page" id="heroDetailPage">
+            <div class="detail-header">
+                <i class="ri-arrow-left-line" onclick="goBackHero()"></i>
+                <h2 id="heroDetailTitle">英雄事迹</h2>
+                <i class="ri-more-2-line" style="font-size: 24px;"></i>
+            </div>
+            <div class="content">
+                <div class="detail-post">
+                    <div class="detail-post-header">
+                        <div class="detail-post-avatar" id="heroAvatar" style="padding: 0; font-size: 0;"></div>
+                        <div class="detail-post-user-info">
+                            <h4 id="heroName">毛泽东</h4>
+                            <p id="heroTitle">伟大的马克思主义者，无产阶级革命家</p>
+                        </div>
+                    </div>
+                    <span class="detail-post-topic">英雄事迹</span>
+                    <h3 class="detail-post-title" id="heroStoryTitle">井冈山革命根据地的创建</h3>
+                    <p class="detail-post-text" id="heroDesc">毛泽东（1893年12月26日-1976年9月9日），字润之，湖南湘潭人。中国共产党、中国人民解放军和中华人民共和国的主要缔造者和领导人。</p>
+                    <p class="detail-post-text" id="heroStory">1927年10月，毛泽东率领秋收起义部队到达井冈山，创建了中国第一个农村革命根据地，开创了"农村包围城市"的革命道路...</p>
+                    <div class="detail-post-images" id="heroImages">
+                        <div class="detail-post-image">🏔️</div>
+                    </div>
+                    <div class="detail-post-actions">
+                        <div class="detail-post-action" id="heroLike" onclick="toggleHeroLike()">
+                            <i class="ri-heart-line"></i> 128.5万
+                        </div>
+                        <div class="detail-post-action">
+                            <i class="ri-chat-1-line"></i> 32.8万
+                        </div>
+                        <div class="detail-post-action">
+                            <i class="ri-star-line"></i> 收藏
+                        </div>
+                        <div class="detail-post-action">
+                            <i class="ri-share-forward-line"></i> 分享
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="comments-section">
+                    <div class="comments-header">
+                        <span>评论 (<span id="heroCommentCount">5</span>)</span>
+                        <span style="font-size: 12px; color: var(--text-gray);">最新</span>
+                    </div>
+                    <div id="heroCommentsList">
+                        <div class="comment-item">
+                            <div class="comment-avatar">学</div>
+                            <div class="comment-content">
+                                <div class="comment-user">学史明理</div>
+                                <div class="comment-text">向革命先烈致敬！毛泽东思想永放光芒！</div>
+                                <div class="comment-time">1小时前</div>
+                            </div>
+                        </div>
+                        <div class="comment-item">
+                            <div class="comment-avatar">红</div>
+                            <div class="comment-content">
+                                <div class="comment-user">红色传承</div>
+                                <div class="comment-text">井冈山精神永远值得我们学习！</div>
+                                <div class="comment-time">2小时前</div>
+                            </div>
+                        </div>
+                        <div class="comment-item">
+                            <div class="comment-avatar">青</div>
+                            <div class="comment-content">
+                                <div class="comment-user">青年一代</div>
+                                <div class="comment-text">作为新时代的青年，我们更应该继承和发扬革命精神！</div>
+                                <div class="comment-time">3小时前</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="comment-input-wrapper">
+                <input type="text" class="comment-input" id="heroCommentInput" placeholder="发表你的评论...">
+                <button class="comment-send-btn" onclick="sendHeroComment()">
+                    <i class="ri-send-plane-fill"></i>
+                </button>
+            </div>
+        </div>
+
+        <div class="page site-detail-page" id="siteDetailPage">
+            <div class="detail-header">
+                <i class="ri-arrow-left-line" onclick="goBackSite()"></i>
+                <h2 id="siteDetailTitle">景点详情</h2>
+                <i class="ri-more-2-line" style="font-size: 24px;"></i>
+            </div>
+            <div class="content">
+                <div class="site-detail-hero">
+                    <img src="" alt="景点图片">
+                    <div class="site-detail-hero-overlay">
+                        <h1>景点名称</h1>
+                        <p>景点简介</p>
+                    </div>
+                </div>
+                
+                <div class="site-detail-section">
+                    <h3 class="site-detail-section-title">
+                        <i class="ri-image-line"></i> 景点图片
+                    </h3>
+                    <div class="site-detail-images">
+                    </div>
+                </div>
+                
+                <div class="site-detail-section">
+                    <h3 class="site-detail-section-title">
+                        <i class="ri-camera-line"></i> AI合影
+                    </h3>
+                    <div class="ai-photo-section">
+                        <div class="ai-photo-preview">
+                            <div class="ai-photo-placeholder">
+                                <i class="ri-image-add-line"></i>
+                                <p>点击下方按钮，体验AI合影</p>
+                            </div>
+                        </div>
+                        <div class="ai-photo-actions">
+                            <button class="ai-photo-btn upload" onclick="uploadUserPhoto()">
+                                <i class="ri-upload-cloud-line"></i> 上传照片
+                            </button>
+                            <button class="ai-photo-btn generate" onclick="generateAIphoto()">
+                                <i class="ri-magic-line"></i> AI生成
+                            </button>
+                            <button class="ai-photo-btn download" onclick="downloadAIphoto()">
+                                <i class="ri-download-line"></i> 保存合影
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="site-nav-section">
+                    <button class="site-nav-btn" onclick="startSiteNavigation()">
+                        <i class="ri-navigation-line"></i> 导航前往
+                    </button>
+                    <div class="site-nav-modes">
+                        <div class="site-nav-mode active" data-mode="driving" onclick="selectSiteNavMode('driving')">
+                            <i class="ri-car-line"></i>
+                            <span>驾车</span>
+                        </div>
+                        <div class="site-nav-mode" data-mode="transfer" onclick="selectSiteNavMode('transfer')">
+                            <i class="ri-bus-line"></i>
+                            <span>公交</span>
+                        </div>
+                        <div class="site-nav-mode" data-mode="walking" onclick="selectSiteNavMode('walking')">
+                            <i class="ri-walk-line"></i>
+                            <span>步行</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="page detail-page" id="detailPage">
+            <div class="detail-header">
+                <i class="ri-arrow-left-line" onclick="goBack()"></i>
+                <h2 id="detailTitle">帖子详情</h2>
+                <i class="ri-more-2-line" style="font-size: 24px;"></i>
+            </div>
+            <div class="content">
+                <div class="detail-post">
+                    <div class="detail-post-header">
+                        <div class="detail-post-avatar" id="detailAvatar">红</div>
+                        <div class="detail-post-user-info">
+                            <h4 id="detailUser">红色旅行者</h4>
+                            <p id="detailTime">2小时前</p>
+                        </div>
+                    </div>
+                    <span class="detail-post-topic" id="detailTopic">#红色之旅</span>
+                    <h3 class="detail-post-title" id="detailPostTitle">今天参观了井冈山革命根据地，太震撼了！</h3>
+                    <p class="detail-post-text" id="detailPostText">站在江西这片红色土地上，仿佛能感受到当年革命先烈们的奋斗精神。井冈山是中国革命的摇篮，这里的每一寸土地都诉说着光荣的历史。</p>
+                    <div class="detail-post-images" id="detailPostImages">
+                        <div class="detail-post-image">🏔️</div>
+                        <div class="detail-post-image">🏛️</div>
+                        <div class="detail-post-image">⭐</div>
+                    </div>
+                    <div class="detail-post-actions">
+                        <div class="detail-post-action" id="detailLike" onclick="toggleDetailLike()">
+                            <i class="ri-heart-line"></i> 128
+                        </div>
+                        <div class="detail-post-action">
+                            <i class="ri-chat-1-line"></i> 36
+                        </div>
+                        <div class="detail-post-action">
+                            <i class="ri-star-line"></i> 收藏
+                        </div>
+                        <div class="detail-post-action">
+                            <i class="ri-share-forward-line"></i> 分享
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="comments-section">
+                    <div class="comments-header">
+                        <span>评论 (<span id="commentCount">5</span>)</span>
+                        <span style="font-size: 12px; color: var(--text-gray);">最新</span>
+                    </div>
+                    <div id="commentsList">
+                        <div class="comment-item">
+                            <div class="comment-avatar">学</div>
+                            <div class="comment-content">
+                                <div class="comment-user">学史明理</div>
+                                <div class="comment-text">说得太好了！井冈山精神永远值得我们学习！</div>
+                                <div class="comment-time">1小时前</div>
+                            </div>
+                        </div>
+                        <div class="comment-item">
+                            <div class="comment-avatar">红</div>
+                            <div class="comment-content">
+                                <div class="comment-user">红色传承</div>
+                                <div class="comment-text">我也想去井冈山看看，感受一下革命圣地的氛围。</div>
+                                <div class="comment-time">2小时前</div>
+                            </div>
+                        </div>
+                        <div class="comment-item">
+                            <div class="comment-avatar">纪</div>
+                            <div class="comment-content">
+                                <div class="comment-user">历史记忆</div>
+                                <div class="comment-text">黄洋界的炮声仿佛还在耳边回响，八角楼的灯光永远照亮着我们前行的道路。</div>
+                                <div class="comment-time">3小时前</div>
+                            </div>
+                        </div>
+                        <div class="comment-item">
+                            <div class="comment-avatar">青</div>
+                            <div class="comment-content">
+                                <div class="comment-user">青年一代</div>
+                                <div class="comment-text">作为新时代的青年，我们更应该继承和发扬井冈山精神！</div>
+                                <div class="comment-time">5小时前</div>
+                            </div>
+                        </div>
+                        <div class="comment-item">
+                            <div class="comment-avatar">旅</div>
+                            <div class="comment-content">
+                                <div class="comment-user">红色之旅</div>
+                                <div class="comment-text">强烈推荐大家来井冈山！真的很震撼！</div>
+                                <div class="comment-time">1天前</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="comment-input-wrapper">
+                <input type="text" class="comment-input" id="commentInput" placeholder="发表你的评论...">
+                <button class="comment-send-btn" onclick="sendComment()">
+                    <i class="ri-send-plane-fill"></i>
+                </button>
+            </div>
+        </div>
+
+        <div class="page history-page" id="historyPage">
+            <div class="detail-header">
+                <i class="ri-arrow-left-line" onclick="goBackHistory()"></i>
+                <h2>学习记录</h2>
+                <i class="ri-delete-bin-line" style="font-size: 22px; cursor: pointer;" onclick="clearBrowseHistory()" title="清空记录"></i>
+            </div>
+            <div class="content" style="padding: 15px; overflow-y: auto;">
+                <div id="historyList" style="display: flex; flex-direction: column; gap: 12px;">
+                </div>
+                <div id="emptyHistory" style="text-align: center; padding: 60px 20px; color: #999; display: none;">
+                    <i class="ri-history-line" style="font-size: 64px; color: #ccc; margin-bottom: 16px; display: block;"></i>
+                    <p>暂无学习记录</p>
+                    <p style="font-size: 12px; margin-top: 8px;">浏览学习内容后会显示在这里</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+        const redSites = [
+            { 
+                id: 1, 
+                name: '井冈山革命根据地', 
+                shortName: '井冈山', 
+                desc: '中国共产党创建的第一个农村革命根据地，中国革命的摇篮。', 
+                lng: 114.1682, 
+                lat: 26.5521, 
+                icon: '🏔️', 
+                hero: '毛泽东', 
+                story: '1927年10月，毛泽东率领秋收起义部队到达井冈山，创建了中国第一个农村革命根据地。',
+                detail: '井冈山革命根据地是土地革命战争时期，中国共产党在湖南、江西两省边界罗霄山脉中段创建的第一个农村革命根据地。1927年10月，毛泽东率领经"三湾改编"后的秋收起义部队到达宁冈，先后在宁冈、永新、茶陵、遂川等县恢复和建立了党组织，发展武装力量，开展游击战争，领导农民打土豪分田地，建立红色政权，实行工农武装割据，创立了党领导下的第一个农村革命根据地。\n\n【景区信息】\n📍 开放时间：08:00 - 17:30（全年开放）\n🎫 门票价格：旺季165元/人，淡季150元/人（70岁以上老人、军人、残疾人免票）\n🚌 交通指南：从吉安市区乘旅游专线直达，或从井冈山火车站转乘景区大巴\n⏱️ 建议游览时间：2-3天\n🌤️ 最佳游览时间：4-5月、9-10月（气候宜人，风景秀丽）\n\n【主要景点】\n• 井冈山革命烈士陵园\n• 井冈山革命博物馆\n• 黄洋界哨口\n• 茅坪八角楼\n• 朱毛会师广场\n• 茨坪革命旧址群\n• 大井毛泽东同志旧居\n• 小井红军医院旧址\n\n【游览贴士】\n💡 建议穿着舒适的运动鞋，山区气候多变，请携带雨具和外套\n💡 可以请一位导游讲解，更深入了解井冈山的革命历史\n💡 景区内餐饮以当地农家菜为主，推荐品尝井冈特色菜\n\n【适合人群】\n👨‍👩‍👧‍👦 家庭亲子游、学生研学游、党员干部学习、红色文化爱好者\n\n【注意事项】\n⚠️ 山区海拔较高，注意防晒和补水\n⚠️ 部分景点需要爬山，量力而行\n⚠️ 请爱护革命文物，保持安静肃穆的参观氛围',
+                history: '1927年10月，毛泽东率领秋收起义部队到达井冈山，开始了"工农武装割据"的伟大实践。在这里，毛泽东写下了《中国的红色政权为什么能够存在？》《井冈山的斗争》等光辉著作，从理论上阐述了中国红色政权存在和发展的原因、条件，提出了"工农武装割据"的思想。1928年4月，朱德、陈毅率领南昌起义保存下来的部队和湘南农军到达井冈山，与毛泽东领导的工农革命军胜利会师，成立了中国工农红军第四军，朱德任军长，毛泽东任党代表。1928年12月，彭德怀、滕代远率领红五军主力来到井冈山，与红四军会师，进一步壮大了革命力量。从1928年到1930年，红军在毛泽东、朱德的指挥下，运用灵活机动的战略战术，粉碎了国民党军队的多次"进剿"和"会剿"，根据地不断巩固和扩大。井冈山革命根据地的建立，开辟了农村包围城市、武装夺取政权的正确道路，是马克思主义中国化的伟大开篇。',
+                images: ['图片素材/井冈山1.jpg', '图片素材/井冈山2.jpg', '图片素材/井冈山3.jpg']
+            },
+            { 
+                id: 2, 
+                name: '南昌八一起义纪念馆', 
+                shortName: '南昌起义', 
+                desc: '南昌起义指挥部旧址，人民军队诞生的地方，军旗升起的地方。', 
+                lng: 115.8921, 
+                lat: 28.6768, 
+                icon: '🚩', 
+                hero: '周恩来', 
+                story: '1927年8月1日，周恩来等领导发动南昌起义，打响了武装反抗国民党反动派的第一枪。',
+                detail: '南昌八一起义纪念馆位于江西省南昌市西湖区中山路，占地面积5903平方米。是为纪念南昌起义而设立的专题博物馆，首批全国爱国主义教育示范基地，全国重点文物保护单位，首批国家级抗战纪念设施、遗址名录。\n\n【景区信息】\n📍 开放时间：09:00 - 17:00（周一闭馆，节假日除外）\n🎫 门票价格：免费（凭有效身份证件预约入场）\n🚌 交通指南：乘地铁1号线到八一馆站，或乘公交到洗马池站\n⏱️ 建议游览时间：2-3小时\n🌤️ 最佳游览时间：四季皆宜（室内展馆）\n\n【主要景点】\n• 八一南昌起义指挥部旧址（江西大旅社）\n• 南昌起义指挥部旧址（朱德旧居）\n• 南昌起义纪念馆新馆\n• 八一广场（人民英雄纪念碑）\n• 朱德军官教育团旧址\n• 叶挺指挥部旧址\n• 贺龙指挥部旧址\n• 刘伯承参谋团旧址\n\n【游览贴士】\n💡 建议提前在官网预约，避免现场排队\n💡 馆内有免费讲解服务，具体时间可咨询前台\n💡 八一广场夜景很美，晚上可以顺便参观\n\n【适合人群】\n👨‍👩‍👧‍👦 学生团体、党员活动、历史爱好者、军事迷\n\n【注意事项】\n⚠️ 周一闭馆，请避开周一前往\n⚠️ 馆内禁止拍照的区域请遵守规定\n⚠️ 请保持安静，不要大声喧哗',
+                history: '1927年，蒋介石、汪精卫相继发动"四一二"、"七一五"反革命政变，大肆屠杀共产党员和革命群众，第一次国共合作破裂，大革命惨遭失败。中国革命处于危机关头。为了挽救革命，中共中央决定在南昌举行武装起义，以革命的武装反对反革命的武装。1927年7月下旬，中共中央成立了以周恩来为书记的前敌委员会，负责领导起义工作。8月1日凌晨2时，在周恩来、贺龙、叶挺、朱德、刘伯承等领导下，党所掌握和影响的国民革命军2万余人在南昌举行起义。经过4个多小时的激烈战斗，起义军全歼守敌3000余人，占领了南昌城，起义取得了胜利。南昌起义打响了武装反抗国民党反动派的第一枪，标志着中国共产党独立领导革命战争、创建人民军队和武装夺取政权的开始。8月1日因此成为中国人民解放军的建军节。',
+                images: ['图片素材/素材1.jpg', '图片素材/素材2.jpg']
+            },
+            { 
+                id: 3, 
+                name: '瑞金中央革命根据地', 
+                shortName: '瑞金', 
+                desc: '中华苏维埃共和国临时中央政府诞生地，红色故都、共和国摇篮。', 
+                lng: 116.0185, 
+                lat: 25.8937, 
+                icon: '🌟', 
+                hero: '毛泽东', 
+                story: '1931年11月，中华苏维埃第一次全国代表大会在瑞金召开，宣告中华苏维埃共和国临时中央政府成立。',
+                detail: '瑞金中央革命根据地纪念馆位于江西省瑞金市象湖镇，是为纪念土地革命战争时期中国共产党及其领袖毛泽东、朱德、周恩来等直接领导创建中央革命根据地和中华苏维埃共和国而建立的，是首批百个爱国主义教育示范基地之一。\n\n【景区信息】\n📍 开放时间：08:30 - 17:30（16:30停止入馆）\n🎫 门票价格：叶坪景区65元，红井景区60元，联票100元\n🚌 交通指南：从瑞金市区乘旅游专线，或从瑞金火车站打车\n⏱️ 建议游览时间：1天\n🌤️ 最佳游览时间：3-5月、9-11月（气候适宜）\n\n【主要景点】\n• 叶坪革命旧址群（一苏大会址）\n• 红井景区（吃水不忘挖井人）\n• 沙洲坝革命旧址群\n• 中华苏维埃纪念园\n• 瑞金中央革命根据地历史博物馆\n• 中央革命军事委员会旧址\n• 红军烈士纪念塔\n• 红军检阅台\n\n【游览贴士】\n💡 建议购买联票，比单独购票更划算\n💡 红井可以喝一口井水，感受"吃水不忘挖井人"的寓意\n💡 景区提供讲解服务，可以深入了解苏维埃历史\n\n【适合人群】\n👨‍👩‍👧‍👦 党员学习、红色研学、历史爱好者、家庭亲子游\n\n【注意事项】\n⚠️ 夏季炎热，注意防晒和补水\n⚠️ 景区较大，建议穿着舒适的鞋子\n⚠️ 请爱护文物，不要触摸展品',
+                history: '1931年11月7日至20日，中华苏维埃第一次全国代表大会在瑞金叶坪隆重开幕。这是中国历史上第一次全国性的工农兵代表大会。出席大会的有来自中央苏区、闽西、赣东北、湘赣、湘鄂赣、琼崖等苏区的代表，以及红军、全国总工会、全国海员工会等代表，共610人。越南、朝鲜的来宾也应邀出席大会。大会通过了《中华苏维埃共和国宪法大纲》《中华苏维埃共和国土地法》等重要法令，选举毛泽东为临时中央政府主席，朱德为中央革命军事委员会主席。11月27日，中华苏维埃共和国临时中央政府正式成立，定都瑞金。瑞金由此成为中国共产党领导创建的第一个全国性红色政权的首府，成为全国苏维埃运动的中心，被誉为"红色故都"、"共和国摇篮"。在这里，中华苏维埃共和国临时中央政府领导苏区人民进行了轰轰烈烈的土地革命、经济建设、文化教育建设和政权建设，积累了治国安邦的宝贵经验，培养造就了一大批治党治国治军的优秀人才。',
+                images: ['图片素材/瑞金1.jpg', '图片素材/瑞金2.jpg']
+            },
+            { 
+                id: 4, 
+                name: '安源路矿工人运动纪念馆', 
+                shortName: '安源', 
+                desc: '中国工人运动的策源地，秋收起义的主要爆发地之一。', 
+                lng: 113.9383, 
+                lat: 27.6354, 
+                icon: '⚒️', 
+                hero: '刘少奇', 
+                story: '1922年，刘少奇、李立三等领导了安源路矿工人大罢工，这是中国共产党第一次独立领导并取得完全胜利的工人斗争。',
+                detail: '安源路矿工人运动纪念馆位于江西省萍乡市安源区，是为纪念中国共产党领导安源路矿工人开展的早期革命斗争历史而建立的专题博物馆，是全国首批爱国主义教育示范基地、首批国家一级博物馆。\n\n【景区信息】\n📍 开放时间：09:00 - 17:00（周一闭馆）\n🎫 门票价格：免费（需提前预约）\n🚌 交通指南：从萍乡市区乘公交或旅游专线直达\n⏱️ 建议游览时间：2-3小时\n🌤️ 最佳游览时间：四季皆宜（室内为主）\n\n【主要景点】\n• 安源路矿工人运动纪念馆\n• 安源路矿工人俱乐部旧址\n• 毛泽东1921年秋来安源旧居\n• 刘少奇1922年9月来安源旧居\n• 安源路矿工人大罢工谈判大楼\n• 总平巷矿井口\n• 盛公祠\n• 安源广场\n\n【游览贴士】\n💡 周一闭馆，请合理安排时间\n💡 可以深入了解中国工人运动的光辉历史\n💡 建议花时间阅读展板内容，了解罢工细节\n\n【适合人群】\n👨‍👩‍👧‍👦 学生研学、党员学习、工运史研究者、历史爱好者\n\n【注意事项】\n⚠️ 馆内禁止吸烟，保持环境整洁\n⚠️ 请轻声细语，不要影响其他参观者\n⚠️ 拍照时请勿使用闪光灯',
+                history: '安源是中国工人运动的策源地。安源路矿是当时江南最大的煤矿企业，有工人1.7万余人。在帝国主义、封建主义和官僚资本主义的三重压迫下，安源路矿工人过着牛马不如的生活。1921年秋，毛泽东同志首次来到安源，点燃了革命的火种。他深入矿井、工棚，了解工人疾苦，启发工人觉悟，为安源工人运动指明了方向。随后，李立三、刘少奇等同志受党的派遣，先后到安源开展工人运动。他们创办工人夜校，建立共产党和青年团组织，成立工人俱乐部。1922年9月，路矿当局企图拒发拖欠工人的工资，工人群情激愤。在毛泽东、刘少奇、李立三等同志的领导下，安源路矿工人举行了震惊全国的大罢工。罢工历时5天，经过激烈斗争，路矿当局被迫接受工人提出的全部条件，罢工取得了完全胜利。安源路矿工人大罢工是中国共产党第一次独立领导并取得完全胜利的工人斗争，充分显示了工人阶级的伟大力量，成为中国工运史上的一座丰碑。',
+                images: ['图片素材/素材1.jpg']
+            },
+            { 
+                id: 5, 
+                name: '上饶集中营革命烈士陵园', 
+                shortName: '上饶', 
+                desc: '皖南事变中被国民党关押的新四军将士和爱国人士的纪念地。', 
+                lng: 117.9735, 
+                lat: 28.4628, 
+                icon: '🕯️', 
+                hero: '叶挺', 
+                story: '皖南事变后，叶挺将军被国民党关押，在此期间他写下了著名的《囚歌》。',
+                detail: '上饶集中营革命烈士陵园，位于江西省上饶市信州区南郊茅家岭雷公山。陵园始建于1955年，占地2平方公里，是全国重点烈士纪念建筑物保护单位、全国重点文物保护单位、全国爱国主义教育示范基地。\n\n【景区信息】\n📍 开放时间：08:30 - 17:30（17:00停止入园）\n🎫 门票价格：免费（凭身份证登记入场）\n🚌 交通指南：从上饶市区乘公交或出租车直达\n⏱️ 建议游览时间：2小时\n🌤️ 最佳游览时间：四季皆宜，清明节前后最佳\n\n【主要景点】\n• 上饶集中营革命烈士纪念碑\n• 上饶集中营革命烈士纪念馆\n• 茅家岭监狱旧址\n• 周田村监狱旧址\n• 李村叶挺将军囚禁处\n• 七峰岩高干禁闭室旧址\n• 革命烈士纪念亭\n• 革命烈士墓群\n\n【游览贴士】\n💡 建议带着崇敬的心情参观，了解革命烈士的英勇事迹\n💡 可以在烈士纪念碑前默哀，表达对先烈的敬意\n💡 清明节期间会有纪念活动，可以选择此时前往\n\n【适合人群】\n👨‍👩‍👧‍👦 党员学习、爱国主义教育、学生研学、历史爱好者\n\n【注意事项】\n⚠️ 请保持庄严肃穆，不要嬉笑打闹\n⚠️ 禁止在纪念碑和烈士墓前大声喧哗\n⚠️ 请爱护陵园环境，不要乱扔垃圾',
+                history: '1941年1月，国民党顽固派制造了震惊中外的"皖南事变"。新四军军长叶挺在与国民党谈判时被扣，部分被俘的新四军指战员和被捕的爱国进步人士共760余人，被国民党顽固派关押在上饶集中营。上饶集中营是国民党反动派设立的规模最大、关押人数最多、酷刑最残酷的法西斯式集中营之一。在狱中，国民党特务用尽各种酷刑，妄图迫使革命志士屈服。但是，以冯雪峰、黄道、叶挺等为代表的革命志士，坚贞不屈，同国民党特务进行了英勇顽强的斗争。他们建立秘密党组织，团结带领广大难友，开展绝食斗争、暴动斗争，谱写了一曲曲惊天地、泣鬼神的英雄赞歌。叶挺将军在狱中写下了气壮山河的《囚歌》，表达了对革命事业的无限忠诚和对国民党反动派的无比蔑视。1942年5月和6月，革命志士先后举行了茅家岭暴动和赤石暴动，部分同志冲出牢笼，回到了革命队伍。上饶集中营的斗争，充分体现了中国共产党人坚贞不屈、视死如归的革命气节和斗争精神。',
+                images: ['图片素材/素材2.jpg']
+            },
+            { 
+                id: 6, 
+                name: '于都红军长征出发地', 
+                shortName: '于都', 
+                desc: '中央红军长征的集结出发地，长征从这里开始。', 
+                lng: 115.4075, 
+                lat: 25.9608, 
+                icon: '🎒', 
+                hero: '红军将士', 
+                story: '1934年10月，中央红军主力8.6万余人在于都河畔集结出发，踏上了二万五千里长征的漫漫征途。',
+                detail: '于都红军长征出发地纪念园，位于江西省赣州市于都县，是为了纪念中央红军长征从于都出发而建的。纪念园由中央红军长征出发纪念馆、中央红军长征出发纪念碑、长征渡口等部分组成。\n\n【景区信息】\n📍 开放时间：08:30 - 17:30（全年开放）\n🎫 门票价格：免费（部分景点可能收费）\n🚌 交通指南：从于都市区乘公交或步行可达\n⏱️ 建议游览时间：2-3小时\n🌤️ 最佳游览时间：10月前后（纪念长征出发）\n\n【主要景点】\n• 中央红军长征出发纪念馆\n• 中央红军长征出发纪念碑\n• 红军长征第一渡口\n• 毛泽东同志旧居\n• 红军大桥\n• 长征源湿地公园\n• 长征文化艺术中心\n• 红军烈士纪念碑\n\n【游览贴士】\n💡 10月17日前后有纪念活动，可以选择此时前往\n💡 可以在长征渡口拍照留念，感受当年红军出发的场景\n💡 纪念馆内有详细的历史介绍，建议仔细阅读\n\n【适合人群】\n👨‍👩‍👧‍👦 党员学习、红色研学、长征史研究者、家庭亲子游\n\n【注意事项】\n⚠️ 请保持肃穆的参观氛围\n⚠️ 渡口区域注意安全，不要靠近水边\n⚠️ 请爱护纪念馆内的展品和文物',
+                history: '1934年10月，由于王明"左"倾冒险主义的错误领导，中央苏区第五次反"围剿"失败，中央红军主力被迫实行战略转移，开始了举世闻名的二万五千里长征。于都河畔是中央红军主力长征的集结出发地。1934年10月，中央红军第一、三、五、八、九军团和中央机关、军委纵队共8.6万余人，先后从瑞金、兴国、宁都等地来到于都河畔集结。为了帮助红军顺利渡河，于都人民倾其所有，积极支援红军。他们收集了大量的木材、毛竹，协助红军架设浮桥；他们把自己的门板、床板甚至寿板都拿出来给红军搭桥；他们为红军缝衣做鞋，准备干粮；他们为红军带路、送信、抬担架。于都河畔，到处是送别的感人场面。父送子、妻送郎、兄弟双双当红军，千言万语嘱咐不完。10月17日至20日，中央红军主力8.6万余人，先后从于都县的8个渡口渡过于都河，踏上了二万五千里长征的漫漫征途。于都人民送别红军的情景，成为长征史上感人至深的一页。',
+                images: ['图片素材/长征精神1.jpg', '图片素材/长征精神2.jpg', '图片素材/长征精神3.jpg']
+            },
+            { 
+                id: 7, 
+                name: '叶坪革命旧址群', 
+                shortName: '叶坪', 
+                desc: '中华苏维埃共和国临时中央政府所在地，包含众多革命旧址。', 
+                lng: 116.0356, 
+                lat: 25.9042, 
+                icon: '🏛️', 
+                hero: '毛泽东', 
+                story: '在叶坪，毛泽东等中央领导同志领导和指挥了中央苏区的革命斗争。',
+                detail: '叶坪革命旧址群位于江西省瑞金市叶坪乡叶坪村，是全国重点文物保护单位。这里是中华苏维埃共和国临时中央政府诞生地，是中国第一个全国性红色政权的建都之地。\n\n【景区信息】\n📍 开放时间：08:30 - 17:30\n🎫 门票价格：包含在瑞金景区联票内\n🚌 交通指南：从瑞金市区乘旅游专线\n⏱️ 建议游览时间：1.5-2小时\n🌤️ 最佳游览时间：3-5月、9-11月\n\n【主要景点】\n• 中华苏维埃第一次全国代表大会旧址（谢氏宗祠）\n• 中华苏维埃共和国临时中央政府旧址\n• 红军烈士纪念塔\n• 红军烈士纪念亭\n• 红军检阅台\n• 公略亭\n• 博生堡\n• 红色中华通讯社旧址\n• 中央出版局旧址\n• 中央邮政局旧址\n\n【游览贴士】\n💡 建议在红军烈士纪念塔前敬献花圈或默哀\n💡 可以了解中华苏维埃共和国的政权建设历史\n💡 景区内植被茂密，可以在树荫下休息\n\n【适合人群】\n👨‍👩‍👧‍👦 党员学习、红色研学、历史爱好者、摄影爱好者\n\n【注意事项】\n⚠️ 请尊重革命旧址，不要乱涂乱画\n⚠️ 景区内禁止吸烟\n⚠️ 请保持安静，不要影响其他参观者',
+                history: '1931年9月28日，毛泽东、朱德指挥根据地军民粉碎了国民党军第三次"围剿"后，来到叶坪村，在此筹建中华苏维埃共和国临时中央政府。叶坪成为中华苏维埃共和国的第一个首府。11月7日至20日，中华苏维埃第一次全国代表大会在叶坪谢氏宗祠隆重召开，宣告中华苏维埃共和国临时中央政府成立。在叶坪，毛泽东、朱德、周恩来等中央领导同志领导和指挥了中央苏区的革命斗争，进行了政权建设、经济建设、文化建设和军事建设的伟大实践。这里保留了一苏大会旧址、中华苏维埃共和国临时中央政府旧址、红军烈士纪念塔、红军烈士纪念亭、红军检阅台、公略亭、博生堡等众多革命旧址。红军烈士纪念塔是为纪念在革命战争中牺牲的红军烈士而建，毛泽东同志亲笔题写了"红军烈士纪念塔"七个大字。叶坪革命旧址群见证了中国共产党在中央苏区的光辉战斗历程，是进行革命传统教育和爱国主义教育的重要基地。',
+                images: ['图片素材/瑞金1.jpg', '图片素材/瑞金2.jpg']
+            },
+            { 
+                id: 8, 
+                name: '井冈山革命博物馆', 
+                shortName: '井冈山博物馆', 
+                desc: '全面展示井冈山革命斗争历史的综合性博物馆。', 
+                lng: 114.1726, 
+                lat: 26.5413, 
+                icon: '📚', 
+                hero: '朱德', 
+                story: '朱德与毛泽东在井冈山会师，创建了中国工农红军第四军。',
+                detail: '井冈山革命博物馆，位于江西省井冈山市茨坪镇，是中国遗址性革命史类博物馆。该馆馆藏文物近3000件，其中珍贵文物有220余件。1959年10月，在中华人民共和国成立十周年之际，井冈山革命博物馆建成并开放。\n\n【景区信息】\n📍 开放时间：08:30 - 17:00（16:30停止入场，周一闭馆）\n🎫 门票价格：包含在井冈山景区门票内\n🚌 交通指南：位于井冈山市中心，步行可达\n⏱️ 建议游览时间：2-3小时\n🌤️ 最佳游览时间：四季皆宜（室内展馆）\n\n【主要景点】\n• 序厅（井冈山革命根据地全景）\n• 井冈山革命根据地的创立\n• 井冈山革命根据地的发展\n• 井冈山革命根据地的坚持\n• 走向全国胜利\n• 专题展厅\n• 临时展厅\n• 互动体验区\n\n【游览贴士】\n💡 周一闭馆，请避开周一前往\n💡 建议跟随讲解员参观，更深入了解井冈山斗争史\n💡 馆内有互动体验区，可以亲自参与\n\n【适合人群】\n👨‍👩‍👧‍👦 党员学习、学生研学、军迷、历史爱好者\n\n【注意事项】\n⚠️ 馆内禁止拍照的区域请遵守\n⚠️ 请保持安静，不要影响其他参观者\n⚠️ 禁止触摸展品，爱护文物',
+                history: '井冈山革命博物馆是为纪念井冈山革命斗争历史而建立的专题博物馆。1927年10月，毛泽东率领秋收起义部队到达井冈山，开始了"工农武装割据"的伟大实践。1928年4月，朱德、陈毅率领南昌起义保存下来的部队和湘南农军到达井冈山，与毛泽东领导的工农革命军胜利会师，成立了中国工农红军第四军，朱德任军长，毛泽东任党代表。两军会师，壮大了井冈山的革命武装力量，巩固扩大了全国第一个农村革命根据地。在井冈山时期，毛泽东、朱德等同志领导红军和根据地人民，同国民党反动派进行了艰苦卓绝的斗争，积累了丰富的革命斗争经验，形成了宝贵的井冈山精神。井冈山精神的主要内涵是：坚定信念、艰苦奋斗、实事求是、敢闯新路、依靠群众、勇于胜利。井冈山革命博物馆以大量珍贵的文物、图片、文献资料，全面、系统地展示了井冈山革命斗争的光辉历史，生动再现了毛泽东、朱德等老一辈无产阶级革命家在井冈山的战斗生活，是学习和研究井冈山革命斗争历史、弘扬井冈山精神的重要场所。',
+                images: ['图片素材/井冈山1.jpg', '图片素材/井冈山2.jpg']
+            },
+            { 
+                id: 9, 
+                name: '三湾改编旧址', 
+                shortName: '三湾', 
+                desc: '三湾改编确立了党对军队的绝对领导，是新型人民军队的开端。', 
+                lng: 114.1063, 
+                lat: 26.7597, 
+                icon: '🏠', 
+                hero: '毛泽东', 
+                story: '1927年9月，毛泽东在三湾对部队进行改编，确立了"支部建在连上"的原则。',
+                detail: '三湾改编旧址，位于江西省吉安市永新县三湾乡三湾村。1927年9月29日，毛泽东率领秋收起义部队到达三湾村，对部队进行了著名的"三湾改编"。三湾改编，确定了中国共产党对军队的绝对领导，保证了我军的无产阶级性质，从政治上、组织上奠定了新型人民军队的基础，在人民军队的建军史上具有重要的意义。\n\n【景区信息】\n📍 开放时间：08:30 - 17:00\n🎫 门票价格：免费\n🚌 交通指南：从永新县城乘城乡班车可达\n⏱️ 建议游览时间：1-2小时\n🌤️ 最佳游览时间：3-10月\n\n【主要景点】\n• 三湾改编纪念馆\n• 毛泽东同志旧居\n• 三湾改编士兵委员会旧址\n• 枫树坪\n• 三湾改编纪念碑\n• 红双井\n• 工农革命军第一军第一师第一团团部旧址\n\n【游览贴士】\n💡 可以深入了解"支部建在连上"的建军原则\n💡 枫树坪是三湾改编的重要地点，可以拍照留念\n💡 建议花时间阅读纪念馆的详细介绍\n\n【适合人群】\n👨‍👩‍👧‍👦 党员学习、军史研究者、红色文化爱好者、学生研学\n\n【注意事项】\n⚠️ 请爱护革命旧址和文物\n⚠️ 保持安静肃穆的参观氛围\n⚠️ 禁止在旧址内吸烟',
+                history: '1927年9月9日，湘赣边界秋收起义爆发。起义军在攻打长沙受挫后，毛泽东毅然决定改变进攻方向，率部向敌人统治力量薄弱的农村进军。9月29日，部队到达江西永新三湾村。此时，部队从起义时的5000余人减员至不足1000人，而且思想混乱，军心涣散，逃跑现象严重，部队面临着溃散的危险。为了巩固这支新生的革命军队，毛泽东在三湾主持召开了前委会议，决定对部队进行改编。这就是著名的"三湾改编"。三湾改编的主要内容是：第一，把原来的工农革命军第一军第一师缩编为工农革命军第一军第一师第一团；第二，在部队中建立党的各级组织，确立"支部建在连上"的制度，班排设党小组，连设党支部，营、团设党委，连以上设党代表；第三，在部队内部实行民主制度，建立士兵委员会，实行官兵平等、经济公开。三湾改编，确立了党对军队的绝对领导，从政治上、组织上奠定了新型人民军队的基础，是中国共产党建设新型人民军队的伟大开端。',
+                images: ['图片素材/素材1.jpg']
+            },
+            { 
+                id: 10, 
+                name: '东固革命根据地', 
+                shortName: '东固', 
+                desc: '土地革命战争时期中国共产党创建的重要农村革命根据地。', 
+                lng: 115.2128, 
+                lat: 26.7519, 
+                icon: '⭐', 
+                hero: '毛泽东', 
+                story: '东固革命根据地被毛泽东誉为"李文林式"的革命根据地。',
+                detail: '东固革命根据地，位于江西省吉安市青原区东固畲族乡，是土地革命战争时期中国共产党创建的最早的农村革命根据地之一。东固革命根据地被毛泽东誉为"李文林式"的革命根据地。\n\n【景区信息】\n📍 开放时间：08:30 - 17:00\n🎫 门票价格：免费\n🚌 交通指南：从吉安市区乘城乡班车可达\n⏱️ 建议游览时间：1-2小时\n🌤️ 最佳游览时间：4-10月\n\n【主要景点】\n• 东固革命根据地纪念馆\n• 东固平民银行旧址\n• 东固消费合作社旧址\n• 东固红色交通站旧址\n• 东固列宁小学旧址\n• 东固医院旧址\n• 东固红四军与江西红军会师旧址\n\n【游览贴士】\n💡 可以了解"李文林式"革命根据地的特点和经验\n💡 可以了解东固平民银行的历史，这是中国共产党早期的金融机构\n💡 景区周边有畲族风情，可以感受少数民族文化\n\n【适合人群】\n👨‍👩‍👧‍👦 党史研究者、红色文化爱好者、历史学者、学生研学\n\n【注意事项】\n⚠️ 请尊重当地民俗习惯\n⚠️ 保持环境整洁，爱护文物\n⚠️ 山区道路注意安全',
+                history: '东固革命根据地是土地革命战争时期中国共产党创建的重要农村革命根据地之一。1927年大革命失败后，东固地区的共产党人赖经邦、曾炳春、李文林等在党的"八七"会议精神指引下，建立了党的组织和革命武装，开展游击战争，实行工农武装割据，开创了东固革命根据地。东固革命根据地的特点是：秘密割据，公开斗争；巩固地向前发展；有党的坚强领导；有坚强的革命武装；有广泛的群众基础。东固革命根据地曾被毛泽东誉为"李文林式"的革命根据地，与井冈山革命根据地相互呼应，相互配合，为中央革命根据地的建立奠定了基础。1929年1月，毛泽东、朱德率领红四军主力从井冈山出发，转战赣南、闽西。2月，红四军在东固地区与东固革命根据地的红军胜利会师。毛泽东、朱德对东固革命根据地的斗争经验给予了高度评价。东固革命根据地在中国革命史上占有重要地位，是中国共产党农村包围城市、武装夺取政权道路的重要组成部分。',
+                images: ['图片素材/素材2.jpg']
+            }
+        ];
+
+        let map = null;
+        let markers = [];
+        let currentInfoWindow = null;
+        let currentPopup = null;
+        let currentCarouselIndex = 0;
+        let carouselInterval = null;
+        let isVoiceActive = false;
+        let currentLocation = null;
+        let selectedSite = null;
+        let currentPost = null;
+        let currentHero = null;
+        let previousPage = 'communityPage';
+        let currentMarker = null;
+        let locationWatchId = null;
+        let browseHistory = [];
+        let currentRouteMode = 'driving';
+
+        const heroData = [
+            {
+                id: 1,
+                avatar: '图片素材2/毛泽东.jpg',
+                name: '毛泽东',
+                title: '伟大的马克思主义者，无产阶级革命家',
+                desc: '毛泽东（1893年12月26日-1976年9月9日），字润之，湖南湘潭人。中国共产党、中国人民解放军和中华人民共和国的主要缔造者和领导人。',
+                storyTitle: '井冈山革命根据地的创建',
+                story: '1927年10月，毛泽东率领秋收起义部队到达井冈山，创建了中国第一个农村革命根据地，开创了"农村包围城市"的革命道路。在井冈山，毛泽东等老一辈无产阶级革命家领导中国工农红军，开展了艰苦卓绝的革命斗争，培育了井冈山精神。',
+                images: ['图片素材2/毛泽东.jpg', '图片素材2/毛泽东井冈山.jpg', '图片素材2/井冈山斗争1.jpg', '图片素材2/井冈山斗争2.jpg', '图片素材2/井冈山斗争3.jpg'],
+                likes: '128.5万',
+                comments: '32.8万',
+                commentsList: [
+                    { user: '学史明理', avatar: '学', text: '向革命先烈致敬！毛泽东思想永放光芒！', time: '1小时前' },
+                    { user: '红色传承', avatar: '红', text: '井冈山精神永远值得我们学习！', time: '2小时前' },
+                    { user: '青年一代', avatar: '青', text: '作为新时代的青年，我们更应该继承和发扬革命精神！', time: '3小时前' },
+                    { user: '革命后代', avatar: '革', text: '没有共产党就没有新中国！永远怀念毛主席！', time: '5小时前' },
+                    { user: '爱国青年', avatar: '爱', text: '农村包围城市，武装夺取政权！这是中国革命的正确道路！', time: '1天前' }
+                ]
+            },
+            {
+                id: 2,
+                avatar: '图片素材2/周恩来.jpg',
+                name: '周恩来',
+                title: '伟大的无产阶级革命家、政治家、军事家',
+                desc: '周恩来（1898年3月5日-1976年1月8日），字翔宇，江苏淮安人。中国人民解放军主要创建人之一，中华人民共和国开国元勋。',
+                storyTitle: '南昌起义的领导者',
+                story: '1927年8月1日，周恩来领导发动了著名的南昌起义，打响了武装反抗国民党反动派的第一枪，标志着中国共产党独立领导革命战争的开始。周恩来同志一生鞠躬尽瘁，为中国革命和建设事业建立了不朽功勋。',
+                images: ['图片素材2/周恩来.jpg', '图片素材2/周恩来南昌起义.jpg'],
+                likes: '95.2万',
+                comments: '28.6万',
+                commentsList: [
+                    { user: '军史爱好者', avatar: '军', text: '向周恩来总理致敬！人民的好总理！', time: '2小时前' },
+                    { user: '党史学习', avatar: '党', text: '八一南昌起义，人民军队诞生的地方！', time: '3小时前' },
+                    { user: '鞠躬尽瘁', avatar: '鞠', text: '周总理一生鞠躬尽瘁，死而后已！永远怀念！', time: '6小时前' },
+                    { user: '人民公仆', avatar: '人', text: '人民的好总理，我们永远怀念您！', time: '1天前' }
+                ]
+            },
+            {
+                id: 3,
+                avatar: '图片素材2/方志敏.jpg',
+                name: '方志敏',
+                title: '无产阶级革命家、军事家、农民运动领袖',
+                desc: '方志敏（1899年8月21日-1935年8月6日），江西弋阳人。遗著《可爱的中国》《清贫》等成为爱国主义教育的珍贵教材。',
+                storyTitle: '可爱的中国',
+                story: '在狱中，方志敏以惊人的毅力和对祖国的无限热爱，写下了《可爱的中国》等不朽篇章，表达了对祖国美好未来的憧憬。"清贫，洁白朴素的生活，正是我们革命者能够战胜许多困难的地方！"这是方志敏同志留下的宝贵精神财富。',
+                images: ['图片素材2/方志敏.jpg', '图片素材2/方志敏可爱中国.jpg'],
+                likes: '256.8万',
+                comments: '67.2万',
+                commentsList: [
+                    { user: '信仰之光', avatar: '信', text: '信仰的力量是无穷的！向方志敏烈士致敬！', time: '1小时前' },
+                    { user: '爱国青年', avatar: '爱', text: '《可爱的中国》永远是我们的精神食粮！', time: '2小时前' },
+                    { user: '清贫精神', avatar: '清', text: '清贫，洁白朴素的生活，正是我们革命者能够战胜许多困难的地方！', time: '4小时前' },
+                    { user: '烈士永垂', avatar: '烈', text: '方志敏烈士永垂不朽！', time: '6小时前' },
+                    { user: '可爱中国', avatar: '可', text: '可爱的中国，我们一定会把您建设得更加美好！', time: '1天前' },
+                    { user: '革命精神', avatar: '革', text: '为了可爱的中国，无数革命先烈献出了宝贵生命！', time: '2天前' }
+                ]
+            }
+        ];
+
+        const postsData = [
+            {
+                id: 1,
+                avatar: '红',
+                user: '红色旅行者',
+                time: '2小时前',
+                topic: '#红色之旅 #井冈山',
+                title: '今天参观了井冈山革命根据地，太震撼了！',
+                text: '站在江西这片红色土地上，仿佛能感受到当年革命先烈们的奋斗精神。井冈山是中国革命的摇篮，这里的每一寸土地都诉说着光荣的历史。黄洋界的炮声仿佛还在耳边回响，八角楼的灯光永远照亮着我们前行的道路。强烈推荐大家来井冈山感受红色文化！',
+                images: ['图片素材/井冈山1.jpg', '图片素材/井冈山2.jpg', '图片素材/井冈山3.jpg'],
+                likes: 128,
+                comments: 36,
+                commentsList: [
+                    { user: '学史明理', avatar: '学', text: '说得太好了！井冈山精神永远值得我们学习！', time: '1小时前' },
+                    { user: '红色传承', avatar: '红', text: '我也想去井冈山看看，感受一下革命圣地的氛围。', time: '2小时前' },
+                    { user: '历史记忆', avatar: '纪', text: '黄洋界的炮声仿佛还在耳边回响，八角楼的灯光永远照亮着我们前行的道路。', time: '3小时前' },
+                    { user: '青年一代', avatar: '青', text: '作为新时代的青年，我们更应该继承和发扬井冈山精神！', time: '5小时前' },
+                    { user: '红色之旅', avatar: '旅', text: '强烈推荐大家来井冈山！真的很震撼！', time: '1天前' }
+                ]
+            },
+            {
+                id: 2,
+                avatar: '纪',
+                user: '历史研究者',
+                time: '昨天',
+                topic: '#南昌起义 #八一起义',
+                title: '南昌起义：人民军队诞生的光辉时刻',
+                text: '1927年8月1日，南昌城头一声枪响，拉开了我们党武装反抗国民党反动派的大幕。这是中国共产党历史上的一个伟大事件，是中国革命史上的一个伟大事件，也是中华民族发展史上的一个伟大事件。南昌起义连同秋收起义、广州起义以及其他许多地区的武装起义，标志着中国共产党独立领导革命战争、创建人民军队的开端，开启了中国革命新纪元。',
+                images: ['图片素材/素材1.jpg', '图片素材/素材2.jpg'],
+                likes: 523,
+                comments: 178,
+                commentsList: [
+                    { user: '军史爱好者', avatar: '军', text: '向革命先烈致敬！人民军队万岁！', time: '昨天' },
+                    { user: '党史学习', avatar: '党', text: '八一南昌起义，人民军队诞生的地方！', time: '昨天' },
+                    { user: '红色记忆', avatar: '记', text: '军旗升起的地方，永远值得纪念！', time: '1天前' }
+                ]
+            },
+            {
+                id: 3,
+                avatar: '学',
+                user: '学史明理',
+                time: '3天前',
+                topic: '#党史学习 #方志敏',
+                title: '读《可爱的中国》有感：信仰的力量',
+                text: '再次研读方志敏烈士的《可爱的中国》，每次都热泪盈眶。在阴暗的牢房里，在生与死的考验面前，方志敏丝毫没有动摇对马克思主义的信仰，丝毫没有动摇对共产主义的信念。他用敌人劝降的纸笔，写下了《可爱的中国》《清贫》等一篇又一篇对党和人民的无限忠诚之作。这种信仰的力量，永远值得我们学习！',
+                images: ['图片素材/可爱的中国1.jpg', '图片素材/可爱的中国2.jpg'],
+                likes: 856,
+                comments: 234,
+                commentsList: [
+                    { user: '信仰之光', avatar: '信', text: '信仰的力量是无穷的！向方志敏烈士致敬！', time: '3天前' },
+                    { user: '爱国青年', avatar: '爱', text: '《可爱的中国》永远是我们的精神食粮！', time: '3天前' },
+                    { user: '清贫精神', avatar: '清', text: '清贫，洁白朴素的生活，正是我们革命者能够战胜许多困难的地方！', time: '4天前' }
+                ]
+            },
+            {
+                id: 4,
+                avatar: '活',
+                user: '红色活动组织者',
+                time: '4天前',
+                topic: '#红色研学 #志愿活动',
+                title: '招募！"重走长征路"红色研学活动开始报名啦！',
+                text: '为深入学习贯彻习近平新时代中国特色社会主义思想，传承红色基因，我们将组织"重走长征路"红色研学活动。活动内容包括：于都长征出发地祭奠、瑞金苏维埃旧址参观、井冈山革命传统教育等。时间：2026年4月15日-20日，报名截止：4月5日。欢迎热爱红色文化的朋友们积极报名！',
+                images: ['图片素材/重走长征路1.jpg', '图片素材/重走长征路2.jpg', '图片素材/重走长征路3.jpg'],
+                likes: 367,
+                comments: 125,
+                commentsList: [
+                    { user: '报名参加', avatar: '报', text: '我要报名！终于等到这个活动了！', time: '4天前' },
+                    { user: '研学爱好者', avatar: '研', text: '活动内容很丰富，一定要参加！', time: '4天前' },
+                    { user: '红色志愿者', avatar: '志', text: '我已经报名了，期待和大家一起学习！', time: '5天前' }
+                ]
+            },
+            {
+                id: 5,
+                avatar: '瑞',
+                user: '瑞金红都人',
+                time: '5天前',
+                topic: '#瑞金 #共和国摇篮',
+                title: '打卡瑞金叶坪革命旧址群：共和国从这里走来',
+                text: '作为瑞金人，每次带外地朋友来叶坪都感到无比自豪！这里是中华苏维埃共和国临时中央政府所在地，是人民共和国的摇篮。一苏大会址、红军烈士纪念塔、红军检阅台...每一处都诉说着那段峥嵘岁月。欢迎大家来瑞金感受红色文化！',
+                images: ['图片素材/瑞金1.jpg', '图片素材/瑞金2.jpg'],
+                likes: 289,
+                comments: 92,
+                commentsList: [
+                    { user: '红都游客', avatar: '游', text: '瑞金是个好地方！共和国摇篮名不虚传！', time: '5天前' },
+                    { user: '苏区精神', avatar: '苏', text: '苏区精神永放光芒！', time: '5天前' },
+                    { user: '红色足迹', avatar: '足', text: '有机会一定要去瑞金看看！', time: '6天前' }
+                ]
+            },
+            {
+                id: 6,
+                avatar: '三',
+                user: '三湾后人',
+                time: '6天前',
+                topic: '#三湾改编 #支部建在连上',
+                title: '三湾改编：人民军队建设的伟大起点',
+                text: '1927年9月29日，毛泽东率领秋收起义部队来到江西永新县三湾村，进行了著名的三湾改编。三湾改编创造性地确立了"支部建在连上"、"官兵平等"等一整套崭新的治军方略，从政治上组织上保证了党对军队的绝对领导，是我党建设新型人民军队最早的一次成功探索和实践。',
+                images: ['图片素材/素材1.jpg'],
+                likes: 412,
+                comments: 134,
+                commentsList: [
+                    { user: '军史研究', avatar: '军', text: '三湾改编，人民军队建设的里程碑！', time: '6天前' },
+                    { user: '支部建设', avatar: '支', text: '支部建在连上，确保了党对军队的绝对领导！', time: '6天前' },
+                    { user: '官兵一致', avatar: '官', text: '官兵平等，是我军的优良传统！', time: '1周前' }
+                ]
+            },
+            {
+                id: 7,
+                avatar: '志',
+                user: '红色志愿者',
+                time: '1周前',
+                topic: '#志愿服务 #红色宣讲',
+                title: '红色文化宣讲志愿者招募中！',
+                text: '为更好地传承红色基因，讲好红色故事，我们面向社会招募红色文化宣讲志愿者。如果你热爱红色文化，有一定的宣讲能力，欢迎加入我们！服务内容包括：红色景点讲解、红色文化进校园、社区红色故事分享会等。让我们一起做红色文化的传播者！',
+                images: ['图片素材/素材2.jpg'],
+                likes: 198,
+                comments: 67,
+                commentsList: [
+                    { user: '志愿报名', avatar: '愿', text: '我要报名！为红色文化传播贡献一份力量！', time: '1周前' },
+                    { user: '宣讲达人', avatar: '宣', text: '我有宣讲经验，非常愿意加入！', time: '1周前' },
+                    { user: '爱心传递', avatar: '爱', text: '这是很有意义的事情，支持！', time: '1周前' }
+                ]
+            },
+            {
+                id: 8,
+                avatar: '于',
+                user: '于都后生',
+                time: '1周前',
+                topic: '#长征精神 #于都',
+                title: '学习长征精神：不忘初心，走好新时代的长征路',
+                text: '作为于都人，从小听着长征的故事长大。8.6万红军将士从于都河畔出发，踏上了二万五千里长征的漫漫征途。长征这一人类历史上的伟大壮举，留给我们最可宝贵的精神财富，就是中国共产党人和红军将士用生命和热血铸就的伟大长征精神。新时代，我们要继承和弘扬长征精神，不忘初心，继续前进！',
+                images: ['图片素材/长征精神1.jpg', '图片素材/长征精神2.jpg', '图片素材/长征精神3.jpg'],
+                likes: 634,
+                comments: 189,
+                commentsList: [
+                    { user: '长征精神', avatar: '长', text: '长征精神永远激励着我们！', time: '1周前' },
+                    { user: '于都人民', avatar: '于', text: '于都河畔，长征出发地！自豪！', time: '1周前' },
+                    { user: '新时代青年', avatar: '新', text: '不忘初心，走好新时代的长征路！', time: '1周前' }
+                ]
+            }
+        ];
+
+        const learningData = [
+            {
+                id: 1,
+                type: 'hero',
+                avatar: '毛',
+                name: '毛泽东',
+                title: '伟大的马克思主义者，无产阶级革命家',
+                desc: '毛泽东（1893年12月26日-1976年9月9日），字润之，湖南湘潭人。中国共产党、中国人民解放军和中华人民共和国的主要缔造者和领导人。',
+                tag: '英雄事迹',
+                postTitle: '井冈山革命根据地的创建',
+                postText: '1927年10月，毛泽东率领秋收起义部队到达井冈山，创建了中国第一个农村革命根据地，开创了"农村包围城市"的革命道路。井冈山革命根据地的建立，点燃了"工农武装割据"的星星之火，为中国革命的中心工作完成从城市到农村的伟大战略转移，走上农村包围城市，最后夺取城市，开辟了新的道路。',
+                images: ['图片素材2/毛泽东.jpg', '图片素材2/毛泽东井冈山.jpg', '图片素材2/井冈山斗争1.jpg'],
+                views: '128.5万',
+                likes: '32.8万',
+                commentsList: [
+                    { user: '党史学习', avatar: '党', text: '没有共产党就没有新中国！向伟人致敬！', time: '2小时前' },
+                    { user: '红色记忆', avatar: '记', text: '农村包围城市，武装夺取政权，这是中国革命的正确道路！', time: '3小时前' },
+                    { user: '井冈山人', avatar: '井', text: '作为井冈山人，我感到无比自豪！', time: '5小时前' }
+                ]
+            },
+            {
+                id: 2,
+                type: 'hero',
+                avatar: '周',
+                name: '周恩来',
+                title: '伟大的无产阶级革命家、政治家、军事家',
+                desc: '周恩来（1898年3月5日-1976年1月8日），字翔宇，江苏淮安人。中国人民解放军主要创建人之一，中华人民共和国开国元勋。',
+                tag: '英雄事迹',
+                postTitle: '南昌起义的领导者',
+                postText: '1927年8月1日，周恩来领导发动了著名的南昌起义，打响了武装反抗国民党反动派的第一枪，标志着中国共产党独立领导革命战争的开始。南昌起义，是中国共产党直接领导的带有全局意义的一次武装起义。它打响了武装反抗国民党反动统治的第一枪，宣告了中国共产党把中国革命进行到底的坚定立场，标志着中国共产党独立地创造革命军队和领导革命战争的开始。',
+                images: ['图片素材2/周恩来.jpg', '图片素材2/周恩来南昌起义.jpg', '图片素材2/光辉历程1.jpg'],
+                views: '95.2万',
+                likes: '28.6万',
+                commentsList: [
+                    { user: '军史爱好者', avatar: '军', text: '八一南昌起义，人民军队诞生的日子！', time: '昨天' },
+                    { user: '向周总理致敬', avatar: '致', text: '周总理永远活在我们心中！', time: '昨天' },
+                    { user: '军旗升起', avatar: '旗', text: '军旗从这里升起！向革命先烈致敬！', time: '1天前' }
+                ]
+            },
+            {
+                id: 3,
+                type: 'hero',
+                avatar: '方',
+                name: '方志敏',
+                title: '无产阶级革命家、军事家、农民运动领袖',
+                desc: '方志敏（1899年8月21日-1935年8月6日），江西弋阳人。遗著《可爱的中国》《清贫》等成为爱国主义教育的珍贵教材。',
+                tag: '英雄事迹',
+                postTitle: '可爱的中国',
+                postText: '在狱中，方志敏以惊人的毅力和对祖国的无限热爱，写下了《可爱的中国》等不朽篇章，表达了对祖国美好未来的憧憬。"朋友，我相信，到那时，到处都是活跃的创造，到处都是日新月异的进步，欢歌将代替了悲叹，笑脸将代替了哭脸，富裕将代替了贫穷，康健将代替了疾苦，智慧将代替了愚昧，友爱将代替了仇杀，生之快乐将代替了死之悲哀，明媚的花园将代替了凄凉的荒地！"',
+                images: ['图片素材2/方志敏.jpg', '图片素材2/方志敏可爱中国.jpg', '图片素材2/光辉历程2.jpg'],
+                views: '256.8万',
+                likes: '67.2万',
+                commentsList: [
+                    { user: '清贫精神', avatar: '清', text: '清贫，洁白朴素的生活，正是我们革命者能够战胜许多困难的地方！', time: '3天前' },
+                    { user: '可爱的中国', avatar: '爱', text: '每次读《可爱的中国》都热泪盈眶！', time: '3天前' },
+                    { user: '信仰之光', avatar: '信', text: '信仰的力量是无穷的！向方志敏烈士致敬！', time: '4天前' }
+                ]
+            },
+            {
+                id: 4,
+                type: 'video',
+                title: '党史教育专题片：光辉历程',
+                duration: '45:30',
+                plays: '892.5万',
+                postTitle: '光辉历程：中国共产党百年奋斗史',
+                postText: '本专题片全面回顾了中国共产党从成立到新时代的百年奋斗历程，展现了党团结带领全国各族人民取得的伟大成就。从南湖红船到天安门广场，从井冈山到西柏坡，从改革开放到新时代，中国共产党始终不忘初心，牢记使命，为中国人民谋幸福，为中华民族谋复兴。',
+                images: ['图片素材2/光辉历程1.jpg', '图片素材2/光辉历程2.jpg', '图片素材2/光辉历程3.jpg'],
+                commentsList: [
+                    { user: '党史学习', avatar: '党', text: '非常好的专题片！值得反复观看！', time: '1周前' },
+                    { user: '光辉历程', avatar: '光', text: '百年征程，百年辉煌！', time: '1周前' },
+                    { user: '不忘初心', avatar: '初', text: '不忘初心，牢记使命！', time: '1周前' }
+                ]
+            },
+            {
+                id: 5,
+                type: 'video',
+                title: '井冈山斗争纪实',
+                duration: '32:15',
+                plays: '567.3万',
+                postTitle: '井冈山斗争：中国革命的摇篮',
+                postText: '本片真实记录了井冈山革命斗争的光辉历史，展现了井冈山精神的深刻内涵。1927年10月，毛泽东率领秋收起义部队到达井冈山，创建了中国第一个农村革命根据地。井冈山精神，是以毛泽东为代表的中国共产党人把马克思列宁主义基本原理与中国革命具体实践相结合而培育的一种伟大革命精神。',
+                images: ['图片素材2/井冈山斗争1.jpg', '图片素材2/井冈山斗争2.jpg', '图片素材2/井冈山斗争3.jpg'],
+                commentsList: [
+                    { user: '井冈山精神', avatar: '井', text: '井冈山精神永放光芒！', time: '1周前' },
+                    { user: '革命摇篮', avatar: '革', text: '中国革命的摇篮，永远值得纪念！', time: '1周前' },
+                    { user: '红色记忆', avatar: '记', text: '珍贵的历史资料！', time: '2周前' }
+                ]
+            },
+            {
+                id: 6,
+                type: 'article',
+                tag: '图文专栏',
+                postTitle: '瑞金：红色故都 共和国摇篮',
+                postText: '瑞金是中华苏维埃共和国临时中央政府诞生地，是全国著名的红色旅游城市和革命传统教育名城。1931年11月，中华苏维埃第一次全国代表大会在瑞金叶坪召开，宣告中华苏维埃共和国临时中央政府成立。瑞金成为全国苏维埃运动的中心，成为人民共和国的摇篮。',
+                images: ['图片素材2/瑞金红色故都.jpg', '图片素材2/红色故都1.jpg', '图片素材2/红色故都2.jpg'],
+                views: '89.6万',
+                likes: '21.5万',
+                commentsList: [
+                    { user: '红都瑞金', avatar: '瑞', text: '共和国从这里走来！', time: '2周前' },
+                    { user: '苏区精神', avatar: '苏', text: '苏区精神永放光芒！', time: '2周前' },
+                    { user: '红色故都', avatar: '故', text: '有机会一定要去瑞金看看！', time: '2周前' }
+                ]
+            },
+            {
+                id: 7,
+                type: 'activity',
+                icon: '🎒',
+                title: '红色研学之旅 - 井冈山行',
+                desc: '走进中国革命摇篮，感受井冈山精神',
+                time: '2026年4月15日 - 4月20日',
+                postTitle: '红色研学之旅：井冈山行报名通知',
+                postText: '为深入学习贯彻习近平新时代中国特色社会主义思想，传承红色基因，我们将组织"红色研学之旅 - 井冈山行"活动。活动内容包括：井冈山革命烈士陵园祭奠、井冈山革命博物馆参观、八角楼现场教学、黄洋界哨口现场体验等。时间：2026年4月15日-20日，报名截止：4月5日。欢迎热爱红色文化的朋友们积极报名！',
+                images: ['图片素材2/井冈山活动1.jpg', '图片素材2/井冈山活动2.jpg', '图片素材2/井冈山活动3.jpg'],
+                commentsList: [
+                    { user: '研学报名', avatar: '研', text: '我要报名！终于等到这个活动了！', time: '3天前' },
+                    { user: '井冈山之旅', avatar: '井', text: '井冈山是一定要去的！', time: '4天前' },
+                    { user: '红色传承', avatar: '传', text: '这样的活动非常有意义！', time: '5天前' }
+                ]
+            },
+            {
+                id: 8,
+                type: 'activity',
+                icon: '✍️',
+                title: '红色主题征文大赛',
+                desc: '以笔为矛，书写红色记忆',
+                time: '报名截止：2026年5月1日',
+                postTitle: '红色主题征文大赛通知',
+                postText: '为庆祝中国共产党成立105周年，我们特举办"红色记忆"主题征文大赛。征文内容围绕红色文化、革命历史、英雄事迹等主题，字数不限，体裁不限。一等奖1名，二等奖3名，三等奖10名，优秀奖若干。报名截止：2026年5月1日。欢迎广大文学爱好者积极投稿！',
+                images: ['图片素材2/光辉历程3.jpg', '图片素材2/百年奋斗史.jpg', '图片素材2/毛泽东井冈山.jpg'],
+                commentsList: [
+                    { user: '文学爱好者', avatar: '文', text: '太好了！我要参加！', time: '4天前' },
+                    { user: '红色记忆', avatar: '记', text: '书写红色记忆，传承红色基因！', time: '5天前' },
+                    { user: '征文比赛', avatar: '征', text: '期待看到优秀作品！', time: '6天前' }
+                ]
+            },
+            {
+                id: 9,
+                type: 'activity',
+                icon: '🎨',
+                title: '红色书法作品展览',
+                desc: '展示优秀红色主题书法作品',
+                time: '2026年4月20日 - 5月10日',
+                postTitle: '红色书法作品展览公告',
+                postText: '为弘扬中华优秀传统文化，传承红色基因，我们将举办"红色记忆"书法作品展览。展览将展出红色主题书法作品100余幅，内容包括毛泽东诗词、革命烈士诗篇、红色经典名言等。展览时间：2026年4月20日-5月10日，展览地点：市文化艺术中心。欢迎广大书法爱好者和市民朋友前来参观！',
+                images: ['图片素材2/红色故都3.jpg', '图片素材2/光辉历程1.jpg', '图片素材2/周恩来.jpg'],
+                commentsList: [
+                    { user: '书法爱好者', avatar: '书', text: '一定要去看！', time: '5天前' },
+                    { user: '红色艺术', avatar: '艺', text: '红色主题书法作品，很有意义！', time: '6天前' },
+                    { user: '文化传承', avatar: '文', text: '弘扬传统文化，传承红色基因！', time: '1周前' }
+                ]
+            },
+            {
+                id: 10,
+                type: 'culture',
+                tag: '文化作品',
+                title: '红色摄影作品展',
+                desc: '用镜头记录红色圣地，展现新时代风采',
+                imageCount: '156幅作品',
+                likes: '8.2万',
+                postTitle: '红色记忆：红色摄影作品展',
+                postText: '本次"红色记忆"摄影作品展共展出作品156幅，作品涵盖江西各红色圣地的自然风光、革命旧址、纪念场馆等内容。摄影师们用镜头记录了红色圣地的壮丽景色，展现了新时代的风采。这些作品不仅是对历史的回望，更是对未来的展望。',
+                images: ['图片素材2/井冈山斗争2.jpg', '图片素材2/红色故都1.jpg', '图片素材2/光辉历程3.jpg'],
+                commentsList: [
+                    { user: '摄影爱好者', avatar: '摄', text: '作品非常棒！', time: '1周前' },
+                    { user: '红色影像', avatar: '影', text: '用镜头记录红色记忆！', time: '1周前' },
+                    { user: '美好瞬间', avatar: '美', text: '展现新时代风采！', time: '2周前' }
+                ]
+            },
+            {
+                id: 11,
+                type: 'activity',
+                icon: '💚',
+                title: '红色文化志愿者招募',
+                desc: '传承红色基因，弘扬革命精神',
+                time: '长期招募中',
+                postTitle: '红色文化志愿者招募启事',
+                postText: '为更好地传承红色基因，讲好红色故事，我们面向社会招募红色文化志愿者。如果你热爱红色文化，有一定的宣讲能力或服务意识，欢迎加入我们！服务内容包括：红色景点讲解、红色文化进校园、社区红色故事分享会、红色活动志愿服务等。让我们一起做红色文化的传播者！',
+                images: ['图片素材2/毛泽东.jpg', '图片素材2/方志敏.jpg', '图片素材2/光辉历程2.jpg'],
+                commentsList: [
+                    { user: '志愿报名', avatar: '愿', text: '我要报名！为红色文化传播贡献一份力量！', time: '1周前' },
+                    { user: '志愿服务', avatar: '志', text: '志愿服务，传承红色基因！', time: '2周前' },
+                    { user: '爱心奉献', avatar: '爱', text: '这是很有意义的事情！', time: '2周前' }
+                ]
+            }
+        ];
+
+        let currentLearningItem = null;
+
+        document.addEventListener('DOMContentLoaded', function() {
+            initCarousel();
+            initRouteModes();
+            initGridLines();
+            initPostClickEvents();
+            initLearningClickEvents();
+            
+            if (typeof AMap !== 'undefined') {
+                initAmap();
+            } else {
+                initMapMarkers();
+            }
+        });
+
+        function initCarousel() {
+            const dotsContainer = document.getElementById('carouselDots');
+            const items = document.querySelectorAll('.carousel-item');
+            
+            items.forEach((_, index) => {
+                const dot = document.createElement('div');
+                dot.className = 'carousel-dot' + (index === 0 ? ' active' : '');
+                dot.onclick = () => goToCarousel(index);
+                dotsContainer.appendChild(dot);
+            });
+
+            startCarousel();
+        }
+
+        function startCarousel() {
+            carouselInterval = setInterval(() => {
+                currentCarouselIndex = (currentCarouselIndex + 1) % 5;
+                updateCarousel();
+            }, 4000);
+        }
+
+        function goToCarousel(index) {
+            currentCarouselIndex = index;
+            updateCarousel();
+            clearInterval(carouselInterval);
+            startCarousel();
+        }
+
+        function updateCarousel() {
+            const inner = document.getElementById('carouselInner');
+            const dots = document.querySelectorAll('.carousel-dot');
+            
+            inner.style.transform = `translateX(-${currentCarouselIndex * 100}%)`;
+            dots.forEach((dot, index) => {
+                dot.classList.toggle('active', index === currentCarouselIndex);
+            });
+        }
+
+        function initGridLines() {
+            const gridLines = document.getElementById('gridLines');
+            if (!gridLines) return;
+
+            // 江西省的经纬度范围
+            const lngMin = 113.5;
+            const lngMax = 118.5;
+            const latMin = 24.5;
+            const latMax = 30.0;
+
+            // 添加经度线 (5条)
+            for (let i = 0; i <= 4; i++) {
+                const lng = lngMin + (lngMax - lngMin) * i / 4;
+                const x = (i / 4) * 100;
+
+                const line = document.createElement('div');
+                line.className = 'longitude-line';
+                line.style.left = x + '%';
+                gridLines.appendChild(line);
+
+                const label = document.createElement('div');
+                label.className = 'longitude-label';
+                label.style.left = x + '%';
+                label.textContent = lng.toFixed(1) + '°E';
+                gridLines.appendChild(label);
+            }
+
+            // 添加纬度线 (5条)
+            for (let i = 0; i <= 4; i++) {
+                const lat = latMax - (latMax - latMin) * i / 4;
+                const y = (i / 4) * 100;
+
+                const line = document.createElement('div');
+                line.className = 'latitude-line';
+                line.style.top = y + '%';
+                gridLines.appendChild(line);
+
+                const label = document.createElement('div');
+                label.className = 'latitude-label';
+                label.style.top = y + '%';
+                label.textContent = lat.toFixed(1) + '°N';
+                gridLines.appendChild(label);
+            }
+        }
+
+        function initRouteModes() {
+            const modes = document.querySelectorAll('.route-mode');
+            modes.forEach(mode => {
+                mode.onclick = function() {
+                    modes.forEach(m => m.classList.remove('active'));
+                    this.classList.add('active');
+                    currentRouteMode = this.getAttribute('data-mode');
+                    if (selectedSite) {
+                        calculateRoute();
+                    }
+                };
+            });
+        }
+
+        function sendCode() {
+            const btn = document.getElementById('codeBtn');
+            let countdown = 60;
+            btn.disabled = true;
+            const timer = setInterval(() => {
+                countdown--;
+                btn.textContent = countdown + 's';
+                if (countdown <= 0) {
+                    clearInterval(timer);
+                    btn.textContent = '获取验证码';
+                    btn.disabled = false;
+                }
+            }, 1000);
+        }
+
+        function login() {
+            const phone = document.getElementById('phoneInput').value;
+            const code = document.getElementById('codeInput').value;
+            
+            if (!phone || phone.length !== 11) {
+                alert('请输入正确的手机号');
+                return;
+            }
+            if (!code) {
+                alert('请输入验证码');
+                return;
+            }
+            
+            enterApp();
+        }
+
+        function enterAsGuest() {
+            document.getElementById('profileName').textContent = '游客用户';
+            enterApp();
+        }
+
+        function enterApp() {
+            switchPage('mapPage');
+            setTimeout(() => {
+                if (typeof BMap !== 'undefined' && !map) {
+                    initBaiduMap();
+                }
+            }, 100);
+        }
+
+        function showBaiduMap() {
+            if (map) {
+                alert('地图已经显示了！');
+                return;
+            }
+            initBaiduMap();
+        }
+
+        function initBaiduMap() {
+            const container = document.getElementById('baidu-container');
+            if (!container) return;
+            
+            map = new BMap.Map('baidu-container');
+            const point = new BMap.Point(115.8921, 27.6354);
+            map.centerAndZoom(point, 8);
+            map.enableScrollWheelZoom(true);
+
+            map.addControl(new BMap.ScaleControl());
+            map.addControl(new BMap.NavigationControl());
+
+            map.addEventListener('movestart', function() {
+                const center = map.getCenter();
+                document.getElementById('lngDisplay').textContent = center.lng.toFixed(4);
+                document.getElementById('latDisplay').textContent = center.lat.toFixed(4);
+            });
+
+            addBaiduMarkers();
+            drawJiangxiBoundary();
+        }
+
+        function drawJiangxiBoundary() {
+            if (!map) return;
+            
+            const jiangxiCoords = [
+                new BMap.Point(113.5, 24.5), new BMap.Point(118.5, 24.5),
+                new BMap.Point(118.5, 30.0), new BMap.Point(113.5, 30.0),
+                new BMap.Point(113.5, 24.5)
+            ];
+            
+            const polygon = new BMap.Polygon(jiangxiCoords, {
+                strokeColor: '#C41E3A',
+                strokeWeight: 3,
+                strokeOpacity: 0.8,
+                fillColor: 'rgba(196, 30, 58, 0.05)',
+                fillOpacity: 0.35
+            });
+            map.addOverlay(polygon);
+        }
+
+        function addBaiduMarkers() {
+            if (!map) return;
+            
+            redSites.forEach(site => {
+                const point = new BMap.Point(site.lng, site.lat);
+                const marker = new BMap.Marker(point);
+                marker.setTitle(site.name);
+
+                const label = new BMap.Label(site.shortName, {
+                    position: point,
+                    offset: new BMap.Size(-20, 25)
+                });
+                label.setStyle({
+                    color: '#C41E3A',
+                    fontSize: '12px',
+                    fontWeight: 'bold',
+                    backgroundColor: 'rgba(255,255,255,0.9)',
+                    border: '1px solid #C41E3A',
+                    borderRadius: '4px',
+                    padding: '2px 6px',
+                    whiteSpace: 'nowrap'
+                });
+                map.addOverlay(label);
+
+                const infoWindowContent = `
+                    <div style="padding: 10px; min-width: 220px;">
+                        <h3 style="margin: 0 0 8px 0; color: #C41E3A; font-size: 16px;">${site.name}</h3>
+                        <p style="margin: 0 0 5px 0; color: #D4AF37; font-size: 13px;"><strong>主要人物：${site.hero}</strong></p>
+                        <p style="margin: 0 0 10px 0; color: #666; font-size: 12px; line-height: 1.5;">${site.story}</p>
+                        <div style="display: flex; gap: 8px;">
+                            <button onclick="openSiteDetail(${site.id})" style="flex:1; padding:8px; background:#C41E3A; color:#fff; border:none; border-radius:6px; cursor:pointer; font-size:13px;">
+                                <i class="ri-information-line"></i> 查看详情
+                            </button>
+                            <button onclick="planRoute(${site.lng}, ${site.lat}, '${site.name}')" style="flex:1; padding:8px; background:#FFF8F0; color:#C41E3A; border:none; border-radius:6px; cursor:pointer; font-size:13px;">
+                                <i class="ri-navigation-line"></i> 规划路线
+                            </button>
+                        </div>
+                    </div>
+                `;
+
+                const infoWindow = new BMap.InfoWindow(infoWindowContent, {
+                    width: 250,
+                    height: 220,
+                    offset: new BMap.Size(0, -30)
+                });
+
+                marker.addEventListener('click', function() {
+                    map.openInfoWindow(infoWindow, point);
+                    currentInfoWindow = infoWindow;
+                    
+                    document.getElementById('lngDisplay').textContent = site.lng.toFixed(4);
+                    document.getElementById('latDisplay').textContent = site.lat.toFixed(4);
+                });
+
+                map.addOverlay(marker);
+                markers.push(marker);
+            });
+
+            addCurrentLocationMarker();
+        }
+
+        function addCurrentLocationMarker() {
+            if (!map) return;
+
+            const centerPoint = map.getCenter();
+            
+            const myIcon = new BMap.Icon('data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2240%22%20height%3D%2240%22%20viewBox%3D%220%200%2040%2040%22%3E%3Ccircle%20cx%3D%2220%22%20cy%3D%2220%22%20r%3D%2218%22%20fill%3D%22%231E88E5%22%20stroke%3D%22%23fff%22%20stroke-width%3D%222%22%2F%3E%3Ctext%20x%3D%2220%22%20y%3D%2226%22%20text-anchor%3D%22middle%22%20fill%3D%22white%22%20font-size%3D%2214%22%20font-weight%3D%22bold%22%3E%E6%88%91%3C%2Ftext%3E%3C%2Fsvg%3E', 
+                new BMap.Size(40, 40), {
+                    anchor: new BMap.Size(20, 40)
+                });
+
+            currentMarker = new BMap.Marker(centerPoint, { icon: myIcon });
+            map.addOverlay(currentMarker);
+
+            const geolocation = new BMap.Geolocation();
+            geolocation.enableSDKLocation();
+            
+            geolocation.getCurrentPosition(function(result) {
+                if (this.getStatus() == BMAP_STATUS_SUCCESS) {
+                    currentLocation = result.point;
+                    currentMarker.setPosition(currentLocation);
+                    map.panTo(currentLocation);
+                    startLocationWatch();
+                } else {
+                    console.log('定位失败，状态码: ' + this.getStatus());
+                }
+            }, { enableHighAccuracy: true });
+        }
+
+        function startLocationWatch() {
+            if (locationWatchId) return;
+            
+            const geolocation = new BMap.Geolocation();
+            geolocation.enableSDKLocation();
+            
+            locationWatchId = setInterval(function() {
+                geolocation.getCurrentPosition(function(result) {
+                    if (this.getStatus() == BMAP_STATUS_SUCCESS && currentMarker) {
+                        const newPoint = result.point;
+                        if (currentLocation) {
+                            const distance = map.getDistance(currentLocation, newPoint);
+                            if (distance > 5) {
+                                currentLocation = newPoint;
+                                currentMarker.setPosition(currentLocation);
+                            }
+                        } else {
+                            currentLocation = newPoint;
+                            currentMarker.setPosition(currentLocation);
+                        }
+                    }
+                }, { enableHighAccuracy: true });
+            }, 5000);
+        }
+
+        function initMapMarkers() {
+            const mapGrid = document.getElementById('mapGrid');
+            if (!mapGrid) return;
+            
+            redSites.forEach(site => {
+                const marker = document.createElement('div');
+                marker.className = 'map-marker';
+                
+                const lngMin = 113.5;
+                const lngMax = 118.5;
+                const latMin = 24.5;
+                const latMax = 30.0;
+                
+                const x = ((site.lng - lngMin) / (lngMax - lngMin)) * 100;
+                const y = ((latMax - site.lat) / (latMax - latMin)) * 100;
+                
+                marker.style.left = Math.max(5, Math.min(95, x)) + '%';
+                marker.style.top = Math.max(5, Math.min(95, y)) + '%';
+                marker.innerHTML = '<i class="ri-map-pin-fill"></i>';
+                marker.onclick = () => showPopup(site, marker);
+                mapGrid.appendChild(marker);
+            });
+
+            document.getElementById('lngDisplay').textContent = '115.89';
+            document.getElementById('latDisplay').textContent = '27.64';
+        }
+
+        function showPopup(site, marker) {
+            if (currentPopup) {
+                currentPopup.remove();
+            }
+            
+            const popup = document.createElement('div');
+            popup.className = 'marker-popup show';
+            popup.innerHTML = `
+                <div class="popup-image">${site.icon}</div>
+                <div class="popup-content">
+                    <h3>${site.name}</h3>
+                    <p style="color: var(--gold); font-weight: bold; margin-bottom: 5px;">主要人物：${site.hero}</p>
+                    <p>${site.story}</p>
+                    <div class="popup-actions">
+                        <button class="popup-btn detail" onclick="openSiteDetail(${site.id})" style="flex:1; padding:8px; background:#FFF8F0; color:#C41E3A; border:none; border-radius:6px; cursor:pointer; font-size:13px;">
+                            <i class="ri-information-line"></i> 查看详情
+                        </button>
+                        <button class="popup-btn navi" onclick="planRoute(${site.lng}, ${site.lat}, '${site.name}')">
+                            <i class="ri-navigation-line"></i> 导航
+                        </button>
+                        <button class="popup-btn fav" onclick="favoritesite('${site.name}')">
+                            <i class="ri-heart-line"></i> 收藏
+                        </button>
+                    </div>
+                </div>
+            `;
+            
+            marker.appendChild(popup);
+            currentPopup = popup;
+            
+            document.getElementById('lngDisplay').textContent = site.lng.toFixed(4);
+            document.getElementById('latDisplay').textContent = site.lat.toFixed(4);
+            
+            setTimeout(() => {
+                document.addEventListener('click', closePopupOnClickOutside);
+            }, 100);
+        }
+
+        function closePopupOnClickOutside(e) {
+            if (!e.target.closest('.map-marker') && currentPopup) {
+                currentPopup.remove();
+                currentPopup = null;
+                document.removeEventListener('click', closePopupOnClickOutside);
+            }
+        }
+
+        function planRoute(lng, lat, name) {
+            console.log('开始规划路线到:', name, lng, lat);
+            selectedSite = { lng, lat, name };
+            document.getElementById('routePanel').classList.add('show');
+            
+            if (!currentLocation) {
+                console.log('当前位置未设置，尝试定位...');
+                const geolocation = new BMap.Geolocation();
+                geolocation.getCurrentPosition(function(result) {
+                    if (this.getStatus() == BMAP_STATUS_SUCCESS) {
+                        currentLocation = result.point;
+                        if (currentMarker) {
+                            currentMarker.setPosition(currentLocation);
+                        }
+                        console.log('定位成功，开始计算路线');
+                        calculateRoute();
+                    } else {
+                        console.log('定位失败，使用地图中心作为起点');
+                        calculateRoute();
+                    }
+                }, { enableHighAccuracy: true });
+            } else {
+                calculateRoute();
+            }
+        }
+
+        function closeRoutePanel() {
+            document.getElementById('routePanel').classList.remove('show');
+            clearNavigation();
+        }
+
+        function clearNavigation() {
+            navigationActive = false;
+            if (navigationWatchId) {
+                clearInterval(navigationWatchId);
+                navigationWatchId = null;
+            }
+            if (currentRouteSearch) {
+                currentRouteSearch.clearResults();
+                currentRouteSearch = null;
+            }
+        }
+
+        let currentRouteSearch = null;
+        
+        function calculateRoute() {
+            if (!map || !selectedSite) return;
+            
+            console.log('开始计算路线，模式:', currentRouteMode);
+            
+            const startPoint = currentLocation || map.getCenter();
+            const endPoint = new BMap.Point(selectedSite.lng, selectedSite.lat);
+            
+            if (currentRouteSearch) {
+                currentRouteSearch.clearResults();
+            }
+            
+            let routeSearch;
+            
+            if (currentRouteMode === 'transfer') {
+                routeSearch = new BMap.TransitRoute(map, {
+                    renderOptions: { map: map, autoViewport: true },
+                    onSearchComplete: function(results) {
+                        updateRouteInfo(results);
+                    }
+                });
+                routeSearch.search(startPoint, endPoint);
+            } else if (currentRouteMode === 'walking') {
+                routeSearch = new BMap.WalkingRoute(map, {
+                    renderOptions: { map: map, autoViewport: true },
+                    onSearchComplete: function(results) {
+                        updateRouteInfo(results);
+                    }
+                });
+                routeSearch.search(startPoint, endPoint);
+            } else {
+                routeSearch = new BMap.DrivingRoute(map, {
+                    renderOptions: { map: map, autoViewport: true },
+                    policy: BMAP_DRIVING_POLICY_LEAST_TIME,
+                    onSearchComplete: function(results) {
+                        updateRouteInfo(results);
+                    }
+                });
+                routeSearch.search(startPoint, endPoint);
+            }
+            
+            currentRouteSearch = routeSearch;
+        }
+
+        function updateRouteInfo(results) {
+            try {
+                if (results && results.getNumPlans && results.getNumPlans() > 0) {
+                    const plan = results.getPlan(0);
+                    if (plan) {
+                        const distance = plan.getDistance();
+                        const duration = plan.getDuration();
+                        
+                        if (distance !== undefined) {
+                            let distanceText;
+                            if (distance < 1000) {
+                                distanceText = distance + '米';
+                            } else {
+                                distanceText = (distance / 1000).toFixed(1) + '公里';
+                            }
+                            document.getElementById('routeDistance').textContent = distanceText;
+                        }
+                        
+                        if (duration !== undefined) {
+                            let durationText;
+                            const minutes = Math.ceil(duration / 60);
+                            if (minutes < 60) {
+                                durationText = minutes + '分钟';
+                            } else {
+                                const hours = Math.floor(minutes / 60);
+                                const mins = minutes % 60;
+                                durationText = hours + '小时' + (mins > 0 ? mins + '分钟' : '');
+                            }
+                            document.getElementById('routeTime').textContent = durationText;
+                        }
+                        
+                        let lightCount = 0;
+                        if (currentRouteMode === 'driving' && plan.getNumRoutes) {
+                            try {
+                                const route = plan.getRoute(0);
+                                if (route && route.getNumSteps) {
+                                    for (let i = 0; i < route.getNumSteps(); i++) {
+                                        const step = route.getStep(i);
+                                        if (step && step.getDescription) {
+                                            const desc = step.getDescription();
+                                            if (desc && desc.includes('红绿灯')) {
+                                                lightCount++;
+                                            }
+                                        }
+                                    }
+                                }
+                            } catch (e) {
+                                console.log('获取路线步骤失败:', e);
+                            }
+                        }
+                        if (lightCount === 0) {
+                            lightCount = Math.floor(Math.random() * 10) + 3;
+                        }
+                        document.getElementById('routeLight').textContent = lightCount + '个';
+                        
+                        return;
+                    }
+                }
+            } catch (e) {
+                console.log('处理路线结果失败:', e);
+            }
+            
+            updateMockRouteInfo();
+        }
+
+        function updateMockRouteInfo() {
+            const startPoint = currentLocation || map.getCenter();
+            const endPoint = new BMap.Point(selectedSite.lng, selectedSite.lat);
+            const distance = map.getDistance(startPoint, endPoint);
+            
+            let distanceText, durationText;
+            let speed;
+            
+            if (currentRouteMode === 'driving') {
+                speed = 40;
+            } else if (currentRouteMode === 'transfer') {
+                speed = 25;
+            } else {
+                speed = 5;
+            }
+            
+            const distanceKm = distance / 1000;
+            const durationHours = distanceKm / speed;
+            const durationMinutes = Math.ceil(durationHours * 60);
+            
+            if (distance < 1000) {
+                distanceText = Math.round(distance) + '米';
+            } else {
+                distanceText = distanceKm.toFixed(1) + '公里';
+            }
+            
+            if (durationMinutes < 60) {
+                durationText = durationMinutes + '分钟';
+            } else {
+                const hours = Math.floor(durationMinutes / 60);
+                const mins = durationMinutes % 60;
+                durationText = hours + '小时' + (mins > 0 ? mins + '分钟' : '');
+            }
+            
+            document.getElementById('routeDistance').textContent = distanceText;
+            document.getElementById('routeTime').textContent = durationText;
+            document.getElementById('routeLight').textContent = (Math.floor(Math.random() * 10) + 3) + '个';
+        }
+
+        let navigationWatchId = null;
+        let navigationActive = false;
+        
+        function startNavigation() {
+            if (isVoiceActive) {
+                speak('已开始导航，请按路线前进');
+            }
+            alert('AI导航已启动！前往' + (selectedSite?.name || '目的地'));
+            
+            navigationActive = true;
+            
+            if (map && selectedSite) {
+                calculateRoute();
+                startNavigationWatch();
+            }
+        }
+        
+        function startNavigationWatch() {
+            if (navigationWatchId) {
+                clearInterval(navigationWatchId);
+            }
+            
+            navigationWatchId = setInterval(function() {
+                if (!map || !selectedSite || !navigationActive) return;
+                
+                const geolocation = new BMap.Geolocation();
+                geolocation.getCurrentPosition(function(result) {
+                    if (this.getStatus() == BMAP_STATUS_SUCCESS && currentMarker) {
+                        const newPoint = result.point;
+                        if (currentLocation) {
+                            const distance = map.getDistance(currentLocation, newPoint);
+                            if (distance > 5) {
+                                currentLocation = newPoint;
+                                currentMarker.setPosition(currentLocation);
+                                
+                                calculateRoute();
+                            }
+                        }
+                    }
+                }, { enableHighAccuracy: true });
+            }, 5000);
+        }
+
+        function locateMe() {
+            if (map) {
+                const geolocation = new BMap.Geolocation();
+                geolocation.getCurrentPosition(function(result) {
+                    if (this.getStatus() == BMAP_STATUS_SUCCESS) {
+                        currentLocation = result.point;
+                        map.centerAndZoom(currentLocation, 12);
+                        if (isVoiceActive) {
+                            speak('已定位到您的当前位置');
+                        }
+                    } else {
+                        if (isVoiceActive) {
+                            speak('定位失败，请检查定位权限');
+                        }
+                        alert('定位失败，请检查定位权限');
+                    }
+                });
+            } else {
+                if (isVoiceActive) {
+                    speak('正在使用模拟定位功能');
+                }
+                alert('智能定位功能已激活');
+            }
+        }
+
+        function toggleVoice() {
+            isVoiceActive = !isVoiceActive;
+            const btn = document.getElementById('voiceBtn');
+            btn.classList.toggle('active', isVoiceActive);
+            
+            if (isVoiceActive) {
+                btn.innerHTML = '<i class="ri-mic-fill"></i>';
+                speak('AI语音导航已开启');
+            } else {
+                btn.innerHTML = '<i class="ri-mic-line"></i>';
+            }
+        }
+
+        function speak(text) {
+            if ('speechSynthesis' in window) {
+                const utterance = new SpeechSynthesisUtterance(text);
+                utterance.lang = 'zh-CN';
+                utterance.rate = 1;
+                speechSynthesis.speak(utterance);
+            }
+        }
+
+        function navigateTo(lng, lat) {
+            planRoute(lng, lat, '目的地');
+        }
+
+        function favoritesite(name) {
+            alert('已收藏：' + name);
+        }
+
+        function handleSearch(value) {
+            const results = document.getElementById('searchResults');
+            
+            if (!value.trim()) {
+                results.classList.remove('show');
+                return;
+            }
+            
+            const filtered = redSites.filter(site => 
+                site.name.includes(value) || site.desc.includes(value) || site.hero.includes(value)
+            );
+            
+            if (filtered.length > 0) {
+                results.innerHTML = filtered.map(site => `
+                    <div class="search-item" onclick="focusSite(${site.id})">
+                        <i class="ri-map-pin-fill"></i>
+                        <div class="search-item-info">
+                            <h4>${site.name}</h4>
+                            <p>${site.desc.substring(0, 30)}...</p>
+                        </div>
+                    </div>
+                `).join('');
+                results.classList.add('show');
+            } else {
+                results.innerHTML = '<div class="search-item" style="color: #999;">未找到相关景点</div>';
+                results.classList.add('show');
+            }
+        }
+
+        function focusSite(id) {
+            document.getElementById('searchResults').classList.remove('show');
+            document.getElementById('searchInput').value = '';
+            
+            const site = redSites.find(s => s.id === id);
+            if (site && map) {
+                map.setZoomAndCenter(14, [site.lng, site.lat]);
+                const marker = markers.find(m => m.getTitle() === site.name);
+                if (marker) {
+                    marker.emit('click');
+                }
+            } else {
+                alert('正在定位到景点：' + site.name);
+            }
+        }
+
+        function logout() {
+            if (confirm('确定要退出登录吗？')) {
+                document.getElementById('loginPage').classList.add('active');
+                document.querySelectorAll('.page').forEach(p => {
+                    if (p.id !== 'loginPage') p.classList.remove('active');
+                });
+                document.getElementById('phoneInput').value = '';
+                document.getElementById('codeInput').value = '';
+            }
+        }
+
+        function switchPage(pageId) {
+            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+            document.getElementById(pageId).classList.add('active');
+            
+            const fab = document.querySelector('.fab');
+            if (fab) {
+                fab.classList.toggle('show', pageId === 'communityPage');
+            }
+            
+            if (pageId === 'mapPage' || pageId === 'learningPage' || pageId === 'communityPage' || pageId === 'profilePage') {
+                document.querySelectorAll('#mapPage .nav-item, #learningPage .nav-item, #communityPage .nav-item, #profilePage .nav-item').forEach(item => {
+                    item.classList.remove('active');
+                });
+                const navIndex = { 'mapPage': 0, 'learningPage': 1, 'communityPage': 2, 'profilePage': 3 };
+                document.querySelectorAll('#' + pageId + ' .nav-item')[navIndex[pageId]]?.classList.add('active');
+            }
+        }
+
+        function switchTab(tab) {
+            const learnTab = document.getElementById('learnTab');
+            const inheritTab = document.getElementById('inheritTab');
+            const tabs = document.querySelectorAll('.learning-page .tab');
+            
+            tabs.forEach(t => t.classList.remove('active'));
+            learnTab.classList.remove('active');
+            inheritTab.classList.remove('active');
+            
+            if (tab === 'learn') {
+                tabs[0].classList.add('active');
+                learnTab.classList.add('active');
+            } else {
+                tabs[1].classList.add('active');
+                inheritTab.classList.add('active');
+            }
+        }
+
+        function toggleLike(el) {
+            const isLiked = el.classList.toggle('liked');
+            const icon = el.querySelector('i');
+            const text = el.textContent.trim();
+            const num = parseInt(text) || 0;
+            
+            if (isLiked) {
+                icon.className = 'ri-heart-fill';
+                el.innerHTML = `<i class="ri-heart-fill"></i> ${num + 1}`;
+            } else {
+                icon.className = 'ri-heart-line';
+                el.innerHTML = `<i class="ri-heart-line"></i> ${Math.max(0, num - 1)}`;
+            }
+        }
+
+        document.querySelectorAll('.topic-chip').forEach((chip, index) => {
+            chip.onclick = function() {
+                document.querySelectorAll('.topic-chip').forEach(c => c.classList.remove('active'));
+                this.classList.add('active');
+                
+                const topic = this.getAttribute('data-topic');
+                const posts = document.querySelectorAll('#postsContainer .post-card');
+                
+                posts.forEach(post => {
+                    if (topic === 'all') {
+                        post.style.display = 'block';
+                    } else {
+                        if (post.getAttribute('data-topic') === topic) {
+                            post.style.display = 'block';
+                        } else {
+                            post.style.display = 'none';
+                        }
+                    }
+                });
+            };
+        });
+
+        function initPostClickEvents() {
+            const postCards = document.querySelectorAll('.post-card');
+            postCards.forEach((card, index) => {
+                card.onclick = function(e) {
+                    if (e.target.closest('.post-action')) return;
+                    openPostDetail(index + 1);
+                };
+            });
+        }
+
+        function openPostDetail(postId) {
+            currentPost = postsData.find(p => p.id === postId);
+            if (!currentPost) return;
+
+            previousPage = 'communityPage';
+
+            document.getElementById('detailAvatar').textContent = currentPost.avatar;
+            document.getElementById('detailUser').textContent = currentPost.user;
+            document.getElementById('detailTime').textContent = currentPost.time;
+            document.getElementById('detailTopic').textContent = currentPost.topic;
+            document.getElementById('detailPostTitle').textContent = currentPost.title;
+            document.getElementById('detailPostText').textContent = currentPost.text;
+            document.getElementById('detailTitle').textContent = '帖子详情';
+
+            const detailLike = document.getElementById('detailLike');
+            detailLike.innerHTML = `<i class="ri-heart-line"></i> ${currentPost.likes}`;
+            detailLike.classList.remove('liked');
+
+            const imagesContainer = document.getElementById('detailPostImages');
+            if (currentPost.images.length > 0) {
+                imagesContainer.innerHTML = currentPost.images.map(img => {
+                    if (img.includes('.jpg') || img.includes('.png') || img.includes('.jpeg') || img.includes('.gif')) {
+                        return `<div class="detail-post-image"><img src="${img}" alt="帖子图片"></div>`;
+                    } else {
+                        return `<div class="detail-post-image">${img}</div>`;
+                    }
+                }).join('');
+                imagesContainer.style.display = 'grid';
+            } else {
+                imagesContainer.style.display = 'none';
+            }
+
+            renderComments();
+            
+            addToBrowseHistory(currentPost, 'community');
+            
+            switchPage('detailPage');
+        }
+
+        function renderComments() {
+            const commentsList = document.getElementById('commentsList');
+            const commentCount = document.getElementById('commentCount');
+            
+            if (currentPost && currentPost.commentsList) {
+                commentCount.textContent = currentPost.commentsList.length;
+                commentsList.innerHTML = currentPost.commentsList.map(comment => `
+                    <div class="comment-item">
+                        <div class="comment-avatar">${comment.avatar}</div>
+                        <div class="comment-content">
+                            <div class="comment-user">${comment.user}</div>
+                            <div class="comment-text">${comment.text}</div>
+                            <div class="comment-time">${comment.time}</div>
+                        </div>
+                    </div>
+                `).join('');
+            }
+        }
+
+        function toggleDetailLike() {
+            const detailLike = document.getElementById('detailLike');
+            const isLiked = detailLike.classList.toggle('liked');
+            const icon = detailLike.querySelector('i');
+            let currentLikes = 128;
+            
+            if (currentPost) {
+                if (isLiked) {
+                    currentPost.likes++;
+                    icon.className = 'ri-heart-fill';
+                } else {
+                    currentPost.likes--;
+                    icon.className = 'ri-heart-line';
+                }
+                currentLikes = currentPost.likes;
+            } else if (currentLearningItem) {
+                let likesNum = 128;
+                if (currentLearningItem.likes) {
+                    likesNum = parseInt(currentLearningItem.likes.replace('万', '')) * 10000;
+                }
+                if (isLiked) {
+                    likesNum++;
+                    icon.className = 'ri-heart-fill';
+                } else {
+                    likesNum--;
+                    icon.className = 'ri-heart-line';
+                }
+                currentLikes = likesNum;
+            }
+            
+            detailLike.innerHTML = `<i class="${icon.className}"></i> ${currentLikes}`;
+            if (isLiked) detailLike.classList.add('liked');
+        }
+
+        function sendComment() {
+            const input = document.getElementById('commentInput');
+            const text = input.value.trim();
+            
+            if (!text) {
+                alert('请输入评论内容');
+                return;
+            }
+            
+            const newComment = {
+                user: '红色文化爱好者',
+                avatar: '我',
+                text: text,
+                time: '刚刚'
+            };
+            
+            if (currentPost) {
+                currentPost.commentsList.unshift(newComment);
+                input.value = '';
+                renderComments();
+            } else if (currentLearningItem) {
+                currentLearningItem.commentsList.unshift(newComment);
+                input.value = '';
+                renderLearningComments();
+            }
+            
+            alert('评论发表成功！');
+        }
+
+        function goBack() {
+            switchPage(previousPage);
+        }
+
+        function initLearningClickEvents() {
+            const learnCards = document.querySelectorAll('#learnTab .card');
+            learnCards.forEach((card, index) => {
+                if (index < 3) {
+                    card.onclick = function() {
+                        openHeroDetail(index + 1);
+                    };
+                } else {
+                    card.onclick = function() {
+                        openLearningDetail(index + 1);
+                    };
+                }
+            });
+
+            const inheritCards = document.querySelectorAll('#inheritTab .card');
+            inheritCards.forEach((card, index) => {
+                card.onclick = function() {
+                    openLearningDetail(index + 7);
+                };
+            });
+        }
+
+        function openLearningDetail(id) {
+            currentLearningItem = learningData.find(item => item.id === id);
+            if (!currentLearningItem) return;
+
+            previousPage = 'learningPage';
+
+            document.getElementById('detailTitle').textContent = '详情';
+            
+            let avatar = '学';
+            let user = '红色文化';
+            let time = '刚刚';
+            let topic = '#红色文化';
+            let title = '';
+            let text = '';
+
+            if (currentLearningItem.type === 'hero') {
+                avatar = currentLearningItem.avatar;
+                user = currentLearningItem.name;
+                topic = '#' + currentLearningItem.tag;
+                title = currentLearningItem.postTitle;
+                text = currentLearningItem.postText;
+            } else if (currentLearningItem.type === 'video') {
+                avatar = '视';
+                user = '红色视频';
+                topic = '#红色视频';
+                title = currentLearningItem.postTitle;
+                text = currentLearningItem.postText;
+            } else if (currentLearningItem.type === 'article') {
+                avatar = '文';
+                user = '红色文化';
+                topic = '#' + currentLearningItem.tag;
+                title = currentLearningItem.postTitle;
+                text = currentLearningItem.postText;
+            } else if (currentLearningItem.type === 'activity') {
+                avatar = currentLearningItem.icon;
+                user = '活动组织者';
+                topic = '#活动交流';
+                title = currentLearningItem.postTitle;
+                text = currentLearningItem.postText;
+            } else if (currentLearningItem.type === 'culture') {
+                avatar = '文';
+                user = '文化作品';
+                topic = '#' + currentLearningItem.tag;
+                title = currentLearningItem.postTitle;
+                text = currentLearningItem.postText;
+            }
+
+            document.getElementById('detailAvatar').textContent = avatar;
+            document.getElementById('detailUser').textContent = user;
+            document.getElementById('detailTime').textContent = time;
+            document.getElementById('detailTopic').textContent = topic;
+            document.getElementById('detailPostTitle').textContent = title;
+            document.getElementById('detailPostText').textContent = text;
+
+            const detailLike = document.getElementById('detailLike');
+            let likesDisplay = '128';
+            if (currentLearningItem.likes) {
+                likesDisplay = currentLearningItem.likes.replace('万', '0000').replace('.', '');
+                likesDisplay = likesDisplay.slice(0, -2);
+            }
+            detailLike.innerHTML = `<i class="ri-heart-line"></i> ${likesDisplay}`;
+            detailLike.classList.remove('liked');
+
+            const imagesContainer = document.getElementById('detailPostImages');
+            if (currentLearningItem.images && currentLearningItem.images.length > 0) {
+                imagesContainer.innerHTML = currentLearningItem.images.map(img => {
+                    if (img.includes('.jpg') || img.includes('.png') || img.includes('.jpeg') || img.includes('.gif')) {
+                        return `<div class="detail-post-image"><img src="${img}" alt="详情图片"></div>`;
+                    } else {
+                        return `<div class="detail-post-image">${img}</div>`;
+                    }
+                }).join('');
+                imagesContainer.style.display = 'grid';
+            } else {
+                imagesContainer.style.display = 'none';
+            }
+
+            renderLearningComments();
+            
+            addToBrowseHistory(currentLearningItem, 'learning');
+            
+            switchPage('detailPage');
+        }
+
+        function addToBrowseHistory(item, sourceType) {
+            let idToUse;
+            if (sourceType === 'community') {
+                idToUse = 'c_' + item.id;
+            } else if (sourceType === 'hero') {
+                idToUse = 'h_' + item.id;
+            } else {
+                idToUse = 'l_' + item.id;
+            }
+            
+            const existingIndex = browseHistory.findIndex(h => h.historyId === idToUse);
+            if (existingIndex !== -1) {
+                browseHistory.splice(existingIndex, 1);
+            }
+            
+            browseHistory.unshift({
+                ...item,
+                historyId: idToUse,
+                sourceType: sourceType,
+                browseTime: new Date().toLocaleString('zh-CN')
+            });
+            
+            if (browseHistory.length > 50) {
+                browseHistory.pop();
+            }
+        }
+
+        function openHistoryPage() {
+            previousPage = 'profilePage';
+            renderBrowseHistory();
+            switchPage('historyPage');
+        }
+
+        function goBackHistory() {
+            switchPage(previousPage);
+        }
+
+        function renderBrowseHistory() {
+            const historyList = document.getElementById('historyList');
+            const emptyHistory = document.getElementById('emptyHistory');
+            
+            if (browseHistory.length === 0) {
+                historyList.style.display = 'none';
+                emptyHistory.style.display = 'block';
+                return;
+            }
+            
+            historyList.style.display = 'flex';
+            emptyHistory.style.display = 'none';
+            
+            historyList.innerHTML = browseHistory.map((item, index) => {
+                let title = '';
+                let typeText = '';
+                let userName = '';
+                
+                if (item.sourceType === 'learning') {
+                    title = item.postTitle || item.title || '';
+                    if (item.type === 'hero') {
+                        typeText = '英雄事迹';
+                    } else if (item.type === 'video') {
+                        typeText = '视频';
+                    } else if (item.type === 'article') {
+                        typeText = '文章';
+                    } else if (item.type === 'activity') {
+                        typeText = '活动';
+                    } else if (item.type === 'culture') {
+                        typeText = '文化作品';
+                    }
+                    userName = item.name || '红色文化';
+                } else if (item.sourceType === 'community') {
+                    title = item.title || '';
+                    typeText = '社区帖子';
+                    userName = item.user || '';
+                } else if (item.sourceType === 'hero') {
+                    title = item.storyTitle || item.title || '';
+                    typeText = '英雄人物';
+                    userName = item.name || '';
+                }
+                
+                let image = '';
+                if (item.images && item.images.length > 0) {
+                    const img = item.images[0];
+                    if (img.includes('.jpg') || img.includes('.png') || img.includes('.jpeg') || img.includes('.gif')) {
+                        image = `<div class="history-image" style="width: 80px; height: 60px; border-radius: 8px; overflow: hidden; flex-shrink: 0;"><img src="${img}" alt="" style="width: 100%; height: 100%; object-fit: cover;"></div>`;
+                    }
+                }
+                
+                let typeColor, typeBgColor;
+                if (item.sourceType === 'community') {
+                    typeColor = '#1E88E5';
+                    typeBgColor = 'rgba(30, 136, 229, 0.1)';
+                } else if (item.sourceType === 'hero') {
+                    typeColor = '#D4AF37';
+                    typeBgColor = 'rgba(212, 175, 55, 0.1)';
+                } else {
+                    typeColor = '#C41E3A';
+                    typeBgColor = 'rgba(196, 30, 58, 0.1)';
+                }
+                
+                return `
+                    <div class="history-item" onclick="openHistoryItem(${index})" style="display: flex; gap: 12px; padding: 12px; background: #fff; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.08); cursor: pointer;">
+                        ${image}
+                        <div style="flex: 1; min-width: 0;">
+                            <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 4px;">
+                                <span style="font-size: 12px; color: ${typeColor}; background: ${typeBgColor}; padding: 2px 8px; border-radius: 4px;">${typeText}</span>
+                                <span style="font-size: 11px; color: #999;">${item.browseTime}</span>
+                            </div>
+                            <h4 style="font-size: 14px; color: #2C1810; margin: 0 0 4px 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">${title}</h4>
+                            <p style="font-size: 12px; color: #999; margin: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">${userName}</p>
+                        </div>
+                        <i class="ri-arrow-right-s-line" style="color: #ccc; font-size: 20px; align-self: center;"></i>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function openHistoryItem(index) {
+            const item = browseHistory[index];
+            if (!item) return;
+            
+            if (item.sourceType === 'learning') {
+                openLearningDetail(item.id);
+            } else if (item.sourceType === 'community') {
+                openPostDetail(item.id);
+            } else if (item.sourceType === 'hero') {
+                openHeroDetail(item.id);
+            }
+        }
+
+        function clearBrowseHistory() {
+            if (browseHistory.length === 0) {
+                alert('暂无记录可清空');
+                return;
+            }
+            
+            if (confirm('确定要清空所有学习记录吗？')) {
+                browseHistory = [];
+                renderBrowseHistory();
+            }
+        }
+
+        function renderLearningComments() {
+            const commentsList = document.getElementById('commentsList');
+            const commentCount = document.getElementById('commentCount');
+            
+            if (currentLearningItem && currentLearningItem.commentsList) {
+                commentCount.textContent = currentLearningItem.commentsList.length;
+                commentsList.innerHTML = currentLearningItem.commentsList.map(comment => `
+                    <div class="comment-item">
+                        <div class="comment-avatar">${comment.avatar}</div>
+                        <div class="comment-content">
+                            <div class="comment-user">${comment.user}</div>
+                            <div class="comment-text">${comment.text}</div>
+                            <div class="comment-time">${comment.time}</div>
+                        </div>
+                    </div>
+                `).join('');
+            }
+        }
+
+        function openHeroDetail(heroId) {
+            currentHero = heroData.find(h => h.id === heroId);
+            if (!currentHero) return;
+
+            previousPage = 'learningPage';
+
+            const heroAvatarElement = document.getElementById('heroAvatar');
+            if (currentHero.avatar.includes('.jpg') || currentHero.avatar.includes('.png') || currentHero.avatar.includes('.jpeg') || currentHero.avatar.includes('.gif')) {
+                heroAvatarElement.innerHTML = `<img src="${currentHero.avatar}" alt="头像" style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%;">`;
+            } else {
+                heroAvatarElement.textContent = currentHero.avatar;
+            }
+            document.getElementById('heroName').textContent = currentHero.name;
+            document.getElementById('heroTitle').textContent = currentHero.title;
+            document.getElementById('heroStoryTitle').textContent = currentHero.storyTitle;
+            document.getElementById('heroDesc').textContent = currentHero.desc;
+            document.getElementById('heroStory').textContent = currentHero.story;
+            document.getElementById('heroDetailTitle').textContent = '英雄事迹';
+
+            const heroLike = document.getElementById('heroLike');
+            heroLike.innerHTML = `<i class="ri-heart-line"></i> ${currentHero.likes}`;
+            heroLike.classList.remove('liked');
+
+            const heroImagesContainer = document.getElementById('heroImages');
+            if (currentHero.images.length > 0) {
+                heroImagesContainer.innerHTML = currentHero.images.map(img => {
+                    if (img.includes('.jpg') || img.includes('.png') || img.includes('.jpeg') || img.includes('.gif')) {
+                        return `<div class="detail-post-image"><img src="${img}" alt="英雄图片"></div>`;
+                    } else {
+                        return `<div class="detail-post-image">${img}</div>`;
+                    }
+                }).join('');
+                heroImagesContainer.style.display = 'grid';
+            } else {
+                heroImagesContainer.style.display = 'none';
+            }
+
+            renderHeroComments();
+            
+            addToBrowseHistory(currentHero, 'hero');
+            
+            switchPage('heroDetailPage');
+        }
+
+        function renderHeroComments() {
+            const commentsList = document.getElementById('heroCommentsList');
+            const commentCount = document.getElementById('heroCommentCount');
+            
+            if (currentHero && currentHero.commentsList) {
+                commentCount.textContent = currentHero.commentsList.length;
+                commentsList.innerHTML = currentHero.commentsList.map(comment => `
+                    <div class="comment-item">
+                        <div class="comment-avatar">${comment.avatar}</div>
+                        <div class="comment-content">
+                            <div class="comment-user">${comment.user}</div>
+                            <div class="comment-text">${comment.text}</div>
+                            <div class="comment-time">${comment.time}</div>
+                        </div>
+                    </div>
+                `).join('');
+            }
+        }
+
+        function toggleHeroLike() {
+            if (!currentHero) return;
+            
+            const heroLike = document.getElementById('heroLike');
+            const isLiked = heroLike.classList.toggle('liked');
+            const icon = heroLike.querySelector('i');
+            
+            let likesStr = currentHero.likes;
+            let likesNum = 0;
+            
+            if (likesStr.includes('万')) {
+                likesNum = parseFloat(likesStr.replace('万', '')) * 10000;
+            } else {
+                likesNum = parseInt(likesStr);
+            }
+            
+            if (isLiked) {
+                likesNum++;
+                icon.className = 'ri-heart-fill';
+            } else {
+                likesNum--;
+                icon.className = 'ri-heart-line';
+            }
+            
+            if (likesNum >= 10000) {
+                likesStr = (likesNum / 10000).toFixed(1) + '万';
+            } else {
+                likesStr = likesNum.toString();
+            }
+            
+            heroLike.innerHTML = `<i class="${icon.className}"></i> ${likesStr}`;
+            if (isLiked) heroLike.classList.add('liked');
+        }
+
+        function sendHeroComment() {
+            const input = document.getElementById('heroCommentInput');
+            const text = input.value.trim();
+            
+            if (!text) {
+                alert('请输入评论内容');
+                return;
+            }
+            
+            if (!currentHero) return;
+            
+            const newComment = {
+                user: '红色文化爱好者',
+                avatar: '我',
+                text: text,
+                time: '刚刚'
+            };
+            
+            currentHero.commentsList.unshift(newComment);
+            input.value = '';
+            renderHeroComments();
+            alert('评论发表成功！');
+        }
+
+        function goBackHero() {
+            switchPage(previousPage);
+        }
+
+        let currentSite = null;
+        let currentSiteNavMode = 'driving';
+
+        function openSiteDetail(siteId) {
+            currentSite = redSites.find(s => s.id === siteId);
+            if (!currentSite) return;
+
+            previousPage = 'mapPage';
+
+            // 更新英雄区域
+            const heroImg = document.querySelector('#siteDetailPage .site-detail-hero img');
+            const heroTitle = document.querySelector('#siteDetailPage .site-detail-hero-overlay h1');
+            const heroDesc = document.querySelector('#siteDetailPage .site-detail-hero-overlay p');
+
+            if (heroImg && currentSite.images.length > 0) {
+                heroImg.src = currentSite.images[0];
+                heroImg.onerror = function() {
+                    this.style.display = 'none';
+                };
+            }
+
+            if (heroTitle) heroTitle.textContent = currentSite.name;
+            if (heroDesc) heroDesc.textContent = currentSite.desc;
+
+            // 更新图片部分
+            const imagesContainer = document.querySelector('#siteDetailPage .site-detail-images');
+            if (imagesContainer) {
+                if (currentSite.images.length > 0) {
+                    imagesContainer.innerHTML = currentSite.images.map(img => `
+                        <div class="site-detail-image">
+                            <img src="${img}" alt="景点图片" onerror="this.style.display='none'; this.parentElement.innerHTML='<i class=ri-image-line></i>'">
+                        </div>
+                    `).join('');
+                    imagesContainer.style.display = 'grid';
+                } else {
+                    imagesContainer.style.display = 'none';
+                }
+            }
+
+            // 重置导航模式
+            currentSiteNavMode = 'driving';
+            updateSiteNavModes();
+
+            switchPage('siteDetailPage');
+        }
+
+        function updateSiteNavModes() {
+            const modes = document.querySelectorAll('#siteDetailPage .site-nav-mode');
+            modes.forEach(mode => {
+                mode.classList.remove('active');
+                if (mode.getAttribute('data-mode') === currentSiteNavMode) {
+                    mode.classList.add('active');
+                }
+            });
+        }
+
+        function selectSiteNavMode(mode) {
+            currentSiteNavMode = mode;
+            updateSiteNavModes();
+        }
+
+        function startSiteNavigation() {
+            if (!currentSite) return;
+            
+            alert('正在启动导航到' + currentSite.name + '（' + 
+                (currentSiteNavMode === 'driving' ? '驾车' : 
+                 currentSiteNavMode === 'transfer' ? '公交' : '步行') + 
+                '）');
+            
+            // 切换回地图页面并规划路线
+            planRoute(currentSite.lng, currentSite.lat, currentSite.name);
+        }
+
+        function goBackSite() {
+            switchPage(previousPage);
+        }
+
+        let userPhotoUploaded = false;
+        let aiPhotoGenerated = false;
+
+        function uploadUserPhoto() {
+            const input = document.createElement('input');
+            input.type = 'file';
+            input.accept = 'image/*';
+            input.onchange = function(e) {
+                const file = e.target.files[0];
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onload = function(event) {
+                        const preview = document.querySelector('.ai-photo-preview');
+                        preview.innerHTML = `<img src="${event.target.result}" alt="用户照片" style="width:100%;height:100%;object-fit:cover;">`;
+                        userPhotoUploaded = true;
+                        alert('照片上传成功！点击"AI生成"生成合影');
+                    };
+                    reader.readAsDataURL(file);
+                }
+            };
+            input.click();
+        }
+
+        function generateAIphoto() {
+            if (!userPhotoUploaded) {
+                alert('请先上传您的照片！');
+                return;
+            }
+
+            if (!currentSite) {
+                alert('请先选择景点！');
+                return;
+            }
+
+            const preview = document.querySelector('.ai-photo-preview');
+            const siteImg = currentSite.images.length > 0 ? currentSite.images[0] : '';
+            
+            preview.innerHTML = `
+                <div style="width:100%;height:100%;background:linear-gradient(135deg,#FFF8F0 0%,#FFE5E5 100%);display:flex;align-items:center;justify-content:center;flex-direction:column;padding:20px;text-align:center;">
+                    <i class="ri-sparkling-line" style="font-size:48px;color:#C41E3A;margin-bottom:15px;"></i>
+                    <h3 style="color:#C41E3A;margin-bottom:10px;">AI合影生成中...</h3>
+                    <p style="color:#666;font-size:14px;">正在为您生成与${currentSite.name}的合影</p>
+                </div>
+            `;
+
+            setTimeout(() => {
+                preview.innerHTML = `
+                    <div style="width:100%;height:100%;position:relative;overflow:hidden;">
+                        <div style="width:100%;height:100%;background:url('${siteImg}') center/cover;filter:brightness(0.7);"></div>
+                        <div style="position:absolute;top:0;left:0;width:100%;height:100%;display:flex;flex-direction:column;justify-content:center;align-items:center;background:rgba(196,30,58,0.1);">
+                            <div style="text-align:center;">
+                                <h2 style="color:#fff;font-size:24px;margin-bottom:10px;text-shadow:2px 2px 4px rgba(0,0,0,0.5);">
+                                    <i class="ri-camera-line"></i> ${currentSite.name}
+                                </h2>
+                                <p style="color:#fff;font-size:14px;text-shadow:1px 1px 2px rgba(0,0,0,0.5);">
+                                    AI合成合影 - 红色记忆
+                                </p>
+                            </div>
+                            <div style="margin-top:20px;padding:10px 20px;background:rgba(255,255,255,0.9);border-radius:10px;">
+                                <p style="color:#C41E3A;font-size:14px;">
+                                    <i class="ri-check-line"></i> AI合影生成成功！
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                aiPhotoGenerated = true;
+            }, 2000);
+        }
+
+        function downloadAIphoto() {
+            if (!aiPhotoGenerated) {
+                alert('请先生成AI合影！');
+                return;
+            }
+
+            alert('AI合影已保存到相册！（演示版：实际项目中可集成真实的AI图像生成API）');
+        }
+    </script>
+</body>
+</html>
